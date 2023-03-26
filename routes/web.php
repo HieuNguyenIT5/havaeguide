@@ -78,8 +78,8 @@ Route::middleware('auth')->group(function () {
         });
         Route::group(['prefix'=>'major', 'as'=> '.major'],function () {
             Route::get('/', [MajorController::class, 'index'])->name('.index');
-            Route::get('{status}', [MajorController::class, 'index'])->name('.status');
-            Route::post('create', [MajorController::class, 'create'])->name('.create');
+            Route::get('list/{status}', [MajorController::class, 'index'])->name('.status');
+            Route::get('create', [MajorController::class, 'create'])->name('.create');
             Route::post('store', [MajorController::class, 'store'])->name('.store');
             Route::post('import', [MajorController::class, 'importExcel'])->name('.import');
             Route::post('export', [MajorController::class, 'excelExport'])->name('.export');

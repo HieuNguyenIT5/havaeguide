@@ -85,10 +85,10 @@
                             @if($school->deleted_at == null)
                             <a href="{{route('admin.school.edit', $school->id)}}" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>
 
-                            <a href="{{ route('admin.school.remove', $school->id) }}" onclick="return confirm('Bạn có chắc chắn muốn ẩn sản phẩm này không?')" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Vô hiệu hóa"><i class="fa-solid fa-eye"></i></a>
+                            <a href="{{ route('admin.school.remove', $school->id) }}" onclick="return confirm('Bạn có chắc chắn muốn ẩn trường này không?')" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Vô hiệu hóa"><i class="fa-solid fa-eye"></i></a>
                             @else
-                            <a href="{{ route('admin.school.restore', $school->id) }}" onclick="return confirm('Bạn có hiển thị lại sản phẩm này không?')" class="btn btn-warning btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Khôi phục"><i class="fa-solid fa-eye-slash"></i></a>
-                            <a href="{{ route('admin.school.delete', $school->id) }}" onclick="return confirm('Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm này không?')" class="btn btn-danger btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Xóa vĩnh viễn"><i class="fa-solid fa-trash"></i></a>
+                            <a href="{{ route('admin.school.restore', $school->id) }}" onclick="return confirm('Bạn có hiển thị lại trường này không?')" class="btn btn-warning btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Khôi phục"><i class="fa-solid fa-eye-slash"></i></a>
+                            <a href="{{ route('admin.school.delete', $school->id) }}" onclick="return confirm('Bạn có chắc chắn muốn xóa vĩnh viễn trường này không?')" class="btn btn-danger btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Xóa vĩnh viễn"><i class="fa-solid fa-trash"></i></a>
                             @endif
                         </td>
                     </tr>

@@ -27,12 +27,12 @@ class MajorController extends Controller
     
     public function create()
     {
-        return $this->majorRepo->createSchool();
+        return $this->majorRepo->createMajor();
     }
 
     public function Store(Request $request)
     {
-        return $this->majorRepo->storeSchool($request);
+        return $this->majorRepo->storeMajor($request);
     }
 
     public function importExcel(Request $request)

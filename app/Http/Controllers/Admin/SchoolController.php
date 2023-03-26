@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Repositories\School\ISchoolRepository;
 use App\Models\School;
 use Illuminate\Http\Request;
-use App\Imports\ExcelImports;
-use App\Exports\ExcelExports;
+use App\Imports\ExcelImportSchools;
+use App\Exports\ExcelExportSchools;
 use Excel;
 
 class SchoolController extends Controller
@@ -57,5 +57,20 @@ class SchoolController extends Controller
 
     public function excelExport(){
         return Excel::download(new ExcelExportSchools , 'school.xlsx');
+    }
+
+    public function remove($id)
+    {
+        return $this->schoolRepo->removeSchool($id);
+    }
+
+    public function restore($id)
+    {
+        return $this->schoolRepo->restoreSchool($id);
+    }
+
+    public function delete($id)
+    {
+        return $this->schoolRepo->deleteSchool($id);
     }
 }

@@ -74,7 +74,7 @@ class SchoolRepository extends Repositories implements ISchoolRepository
                 $request->image->move(public_path("images"), $fileName);
                 $school['school_image'] = $fileName;
             }else $school['school_image'] = 'image_blank.jpg';
-            $this->school->create();
+            $this->school->create($school);
                 return redirect("admin/school")->with("success", "Thêm trường học thành công!");
         }catch(Exception $ex){
             return redirect("admin/school")->with("danger", "Thêm trường học thất bại!".$ex->getMessage());
@@ -148,11 +148,43 @@ class SchoolRepository extends Repositories implements ISchoolRepository
         }
     }
     
-    public function removeSchool($request){
-
+    public function removeSchool($id){
+        try{
+            $school = $this->school->withTrashed()->find($id);
+            if($school != null){
+                $school->delete();
+                return redirect()->back()->with('success', "Ẩn trường thành công!");
+            }
+            return redirect()->back()->with('danger', "Không có trường nào như thế!");
+        }catch(Exception){
+            return redirect()->back()->with('success', "Ẩn trường thất bại!");
+        }
     }
-    public function deleteSchool($request){
 
+    public function restoreSchool($id){
+        try{
+            $school = $this->school->withTrashed()->find($id);
+            if($school != null){
+                $school->restore();
+                return redirect()->back()->with('success', "Hiển thị trường thành công!");
+            }
+            return redirect()->back()->with('danger', "Không có trường nào như thế!");
+        }catch(Exception){
+            return redirect()->back()->with('success', "Hiển thị trường thất bại!");
+        }
+    }
+
+    public function deleteSchool($id){
+        try{
+            $school = $this->school->withTrashed()->find($id);
+            if($school != null){
+                $school->forceDelete();
+                return redirect()->back()->with('success', "Xóa trường thành công!");
+            }
+            return redirect()->back()->with('danger', "Không có trường nào như thế!");
+        }catch(Exception){
+            return redirect()->back()->with('success', "Xóa trường thất bại!");
+        }
     }
     public function count()
     {

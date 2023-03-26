@@ -77,23 +77,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if($Majors->total() > 0)
-                    @foreach($Majors as $Major)
+                    @if($majors->total() > 0)
+                    @foreach($majors as $major)
                     <tr class="">
                         <td>
-                            <input type="checkbox" name="list_check[]" value="{{$Major->id}}">
+                            <input type="checkbox" name="list_check[]" value="{{$major->id}}">
                         </td>
-                        <td style="width:30%; overflow:hidden;"><a href="#">{{$Major->major_name}}</a></td>
-                        <td style="width:50%; overflow:hidden;"><a href="#">{{$Major->major_description}}</a></td>
-                        <td style="width:30%; overflow:hidden;">{{$Major->created_at}}</td>
+                        <td style="width:30%; overflow:hidden;"><a href="#">{{$major->major_name}}</a></td>
+                        <td style="width:50%; overflow:hidden;"><a href="#">{{$major->major_description}}</a></td>
+                        <td style="width:30%; overflow:hidden;">{{$major->created_at}}</td>
                         <td style="width:10%; overflow:hidden;">
-                            @if($Major->deleted_at == null)
-                            <a href="{{route('admin.major.edit', $Major->id)}}" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>
+                            @if($major->deleted_at == null)
+                            <a href="{{route('admin.major.edit', $major->id)}}" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>
 
-                            <a href="{{ route('admin.major.remove', $Major->id) }}" onclick="return confirm('Bạn có chắc chắn muốn ẩn sản phẩm này không?')" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Vô hiệu hóa"><i class="fa-solid fa-eye"></i></a>
+                            <a href="{{ route('admin.major.remove', $major->id) }}" onclick="return confirm('Bạn có chắc chắn muốn ẩn ngành này không?')" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Vô hiệu hóa"><i class="fa-solid fa-eye"></i></a>
                             @else
-                            <a href="{{ route('admin.major.restore', $Major->id) }}" onclick="return confirm('Bạn có hiển thị lại sản phẩm này không?')" class="btn btn-warning btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Khôi phục"><i class="fa-solid fa-eye-slash"></i></a>
-                            <a href="{{ route('admin.major.delete', $Major->id) }}" onclick="return confirm('Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm này không?')" class="btn btn-danger btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Xóa vĩnh viễn"><i class="fa-solid fa-trash"></i></a>
+                            <a href="{{ route('admin.major.restore', $major->id) }}" onclick="return confirm('Bạn có hiển thị lại ngành này không?')" class="btn btn-warning btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Khôi phục"><i class="fa-solid fa-eye-slash"></i></a>
+                            <a href="{{ route('admin.major.delete', $major->id) }}" onclick="return confirm('Bạn có chắc chắn muốn xóa vĩnh viễn ngành này không?')" class="btn btn-danger btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Xóa vĩnh viễn"><i class="fa-solid fa-trash"></i></a>
                             @endif
                         </td>
                     </tr>
@@ -106,7 +106,7 @@
                 </tbody>
             </table>
             <div>
-                {{$Majors->links()}}
+                {{$majors->links()}}
             </div>
             
     </div>

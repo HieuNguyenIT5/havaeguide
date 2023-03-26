@@ -10,34 +10,34 @@ use GuzzleHttp\Psr7\Message;
 
 class MajorRepository extends Repositories implements IMajorRepository
 {
-    private $Major;
-    private $Sector;
-    function __construct(Major $Major,Sector $Sector)
+    private $major;
+    private $sector;
+    function __construct(Major $major,Sector $Sector)
     {
-        $this->Major = $Major;
-        $this->Sector = $Sector;
+        $this->major = $major;
+        $this->sector = $Sector;
     }
     public function find($id){
-        return $this->Major->find($id);
+        return $this->major->find($id);
     }
     public function getMajor($request, $status)
     {
-        $Majors = $this->getModelWithStatus($status, $this->Major)->join('sectors', 'sectors.id', '=', 'majors.sector_id')->select('majors.*', 'sectors.name');
+        $majors = $this->getModelWithStatus($status, $this->major)->join('sectors', 'sectors.id', '=', 'majors.sector_id')->select('majors.*', 'sectors.name');
         $search = '';
         if($request->keyword){
             $search = $request->keyword;
-            $Majors = $Majors->where('major_name', 'like', "%{$search}%");
+            $majors = $majors->where('major_name', 'like', "%{$search}%");
         }
-        $Majors = $Majors->paginate(10);
+        $majors = $majors->paginate(10);
         $count = $this->count();
         $list_act = $this->getListStatus($status);
         
-        return view('admin.major.index', compact("Majors", "count", "list_act"));
+        return view('admin.major.index', compact("majors", "count", "list_act"));
     }
     
     public function createMajor(){
-        $Sectors = $this->Sector->select("id", "name")->get();
-        return view("admin.major.create", compact("Sectors"));
+        $sectors = $this->sector->select("id", "name")->get();
+        return view("admin.major.create", compact("sectors"));
     }
 
     public function storeMajor($request){
@@ -55,41 +55,36 @@ class MajorRepository extends Repositories implements IMajorRepository
         );
         // dd($request->all());
         try{
-            $Major = $request->except('_token');
-            if(!empty($request->file('image'))) {
-                $fileName = time() . '.' . $request->image->extension();
-                $request->image->move(public_path("images"), $fileName);
-                $Major['Major_image'] = $fileName;
-            }else $Major['Major_image'] = 'image_blank.jpg';
-            $this->Major->create();
-                return redirect("admin/Major")->with("success", "Thêm trường học thành công!");
+            $major = $request->except('_token');
+            $this->major->create($major);
+                return redirect()->back()->with("success", "Thêm ngành đào tạo thành công!");
         }catch(Exception $ex){
-            return redirect("admin/Major")->with("danger", "Thêm trường học thất bại!".$ex->getMessage());
+            return rredirect()->back()->with("danger", "Thêm ngành đào tạo thất bại!".$ex->getMessage());
         }
     }
 
     public function editMajor($id){
-        $Sectors = $this->Sector->select("id", "Sector_name")->get();
-        $Major = $this->find($id);
-        return compact("Sectors", "Major");
+        $Sectors = $this->sector->select("id", "Sector_name")->get();
+        $major = $this->find($id);
+        return compact("Sectors", "major");
     }
     public function updateMajor($request, $id){
         $rules = [
-            'Major_code' => [
+            'major_code' => [
                 'required',
                 'string',
                 'max:10',
-                Rule::unique('Majors')->ignore($id),
+                Rule::unique('majors')->ignore($id),
             ],
-            'Major_name' => 'required|string|max:200',
-            'Major_address' => 'string|max:500',
-            'Major_phone' => [        
+            'major_name' => 'required|string|max:200',
+            'major_address' => 'string|max:500',
+            'major_phone' => [        
                 'required',        
                 'string',        
                 'regex:/^0[0-9]{9,10}$/',        
                 'max:11',    
             ],
-            'Major_image' => 'mimes:jpg,png,gif,webp|max:20000',
+            'major_image' => 'mimes:jpg,png,gif,webp|max:20000',
         ];
         
         $messages = [
@@ -101,52 +96,82 @@ class MajorRepository extends Repositories implements IMajorRepository
         ];
         
         $attributes = [
-            'Major_code' => 'Mã trường',
-            'Major_email' => 'Email',
-            'Major_name' => 'Tên trường',
-            'Major_address' => 'Địa chỉ',
-            'Major_phone' => 'Số điện thoại',
-            'Major_image' => 'Logo',
+            'major_code' => 'Mã trường',
+            'major_email' => 'Email',
+            'major_name' => 'Tên trường',
+            'major_address' => 'Địa chỉ',
+            'major_phone' => 'Số điện thoại',
+            'major_image' => 'Logo',
         ];
         
-        if ($request->Major_email != null) {
-            $rules['Major_email'] = [
+        if ($request->major_email != null) {
+            $rules['major_email'] = [
                 'max:255',
-                Rule::unique('Majors')->ignore($id),
+                Rule::unique('majors')->ignore($id),
             ];
         }
         
         $request->validate($rules, $messages, $attributes);
     
         try {
-            $Major = $request->except('_token');
-            if ($request->hasFile('Major_image')) {
-                $image = $request->file('Major_image');
+            $major = $request->except('_token');
+            if ($request->hasFile('major_image')) {
+                $image = $request->file('major_image');
                 $fileName = time() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('images'), $fileName);
-                $Major['Major_image'] = $fileName;
+                $major['major_image'] = $fileName;
             }
             
-            $this->Major->find($id)->update($Major);
+            $this->major->find($id)->update($major);
     
-            return redirect("admin/Major")->with("success", "Cập nhật thông tin trường học thành công!");
+            return redirect("admin/major")->with("success", "Cập nhật thông tin trường học thành công!");
         } catch(Exception $ex) {
-            return redirect("admin/Major")->with("danger", "Cập nhật thông tin trường học thất bại! " . $ex->getMessage());
+            return redirect("admin/major")->with("danger", "Cập nhật thông tin trường học thất bại! " . $ex->getMessage());
         }
     }
     
-    public function removeMajor($request){
-
+    public function removeMajor($id){
+        try{
+            $major = $this->major->withTrashed()->find($id);
+            if($major != null){
+                $major->delete();
+                return redirect()->back()->with('success', "Ẩn ngành đào tạo thành công!");
+            }
+            return redirect()->back()->with('danger', "Không có ngành đào tạo nào như thế!");
+        }catch(Exception){
+            return redirect()->back()->with('success', "Ẩn ngành đào tạo thất bại!");
+        }
     }
-    public function deleteMajor($request){
-
+    public function restoreMajor($id){
+        try{
+            $major = $this->major->withTrashed()->find($id);
+            if($major != null){
+                $major->restore();
+                return redirect()->back()->with('success', "Hiển thị ngành đào tạo thành công!");
+            }
+            return redirect()->back()->with('danger', "Không có ngành đào tạo nào như thế!");
+        }catch(Exception){
+            return redirect()->back()->with('success', "Hiển thị ngành đào tạo thất bại!");
+        }
+    }
+    public function deleteMajor($id){
+        try{
+            $major = $this->major->withTrashed()->find($id);
+            if($major != null){
+                $major->forceDelete();
+                return redirect()->back()->with('success', "Xóa ngành đào tạo thành công!");
+            }
+            return redirect()->back()->with('danger', "Không có ngành đào tạo nào như thế!");
+        }catch(Exception){
+            return redirect()->back()->with('success', "Xóa ngành đào tạo thất bại!");
+        }
     }
     public function count()
     {
         $count = [];
-        $count['all_major'] = $this->Major->withTrashed()->count();
-        $count['major_active'] = $this->Major->all()->count();
-        $count['major_hide'] = $this->Major->onlyTrashed()->count();
+        $count['all_major'] = $this->major->withTrashed()->count();
+        $count['major_active'] = $this->major->all()->count();
+        $count['major_hide'] = $this->major->onlyTrashed()->count();
         return $count;
     }
 
