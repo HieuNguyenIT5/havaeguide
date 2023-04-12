@@ -1,9 +1,12 @@
 <?php
 namespace App\Repositories;
-
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Database\Eloquent\Model;
 
 class Repositories{
+
+    private $url = "https://provinces.open-api.vn/api/p";
+
     public function getModelWithStatus($status, $model){
         if($status == 'hide'){
             $model = $model->onlyTrashed();
@@ -31,4 +34,35 @@ class Repositories{
         }
         return $list_act;
     }
+
+    public function getArea(){
+        $areas = Redis::get("areas");
+        if(is_null($areas)){
+            $data = file_get_contents($this->url);
+            $areas = json_decode($data, true);
+            Redis::set("areas", $areas);
+        }else{
+            $areas = json_decode($areas);
+        }
+        return $areas;
+    }
+    public function getAreaCenter(){
+        $areasCenter = Redis::get("areasCenter");
+        if(is_null($areasCenter)){
+            $data = file_get_contents($this->url);
+            $areasCenter = json_decode($data, true);
+            $areasCenter = array_filter($areasCenter, function($areasCenter) {
+                return $areasCenter['division_type'] == 'thành phố trung ương' ||
+                in_array($areasCenter['code'], [15, 8, 19]);
+            });
+            Redis::set("areasCenter", json_encode($areasCenter));
+        }else{
+            $areasCenter = json_decode($areasCenter);
+        }
+        $areasCenter = json_decode(Redis::get("areasCenter"));
+        return $areasCenter;
+    }
 }
+
+
+

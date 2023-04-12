@@ -37,6 +37,19 @@
                             <small class="text-danger">{{$message}}</small>
                             @enderror
                         </div>
+                        <div class="form-group">
+                            <label for="image">Ảnh minh họa</label>
+                            <div>
+                                <input type="file" name="image" id="image" accept="image/gif, image/jpeg, image/png, image/webp" onchange="loadFile(event)">
+                                <div class="avatar-img">
+                                    <img id="image-show" src="{{asset('images/image_blank.jpg')}}" alt="Ảnh minh họa">
+                                </div>
+                            </div>
+                            @error('image')
+                            <small class="text-danger">{{$message}}</small>
+                            @enderror
+                        </div>
+        
                         <button type="submit" name="create" class="btn btn-primary btn_create">Thêm mới</button>
                     </form>
                 </div>
@@ -124,8 +137,9 @@
                     $("input#id").val(data.id);
                     tinymce.get("description").setContent(data.description == null ? "" : data.description);
                     var url = "{{ route('admin.sector.update')}}";
-                    console.log(url);
                     $(".action_sector form").attr("action", url);
+                    src = "http://localhost/havaeguide/public/images/"+data.image;
+                    $("form #image-show").attr('src', src);
                 },
                     error: function(jqXHR, textStatus, errorThrown) {
                     console.error("Lỗi: " + errorThrown);

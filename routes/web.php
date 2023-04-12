@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SliderController;
@@ -40,6 +41,19 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [RoleController::class, 'index'])->name('.index');
             Route::get('create', [RoleController::class, 'create'])->name('.create');
             Route::post('store', [RoleController::class, 'store'])->name('.store');
+        });
+        Route::group(['prefix'=>'user', 'as'=> '.user'],function () {
+            Route::get('/', [UserController::class, 'index'])->name('.index');
+            Route::get('list', [UserController::class, 'index'])->name('.index');
+            Route::get('list/{status}', [UserController::class, 'list'])->name('.status');
+            Route::get('create', [UserController::class, 'create'])->name('.create');
+            Route::post('store', [UserController::class, 'store'])->name('.store');
+            Route::get('action', [UserController::class, 'action'])->name('.action');
+            Route::get('edit/{id}', [UserController::class, 'edit'])->name('.edit');
+            Route::post('update/{id}', [UserController::class, 'update'])->name('.update');
+            Route::get('remove/{id}', [UserController::class, 'remove'])->name('.remove');
+            Route::get('restore/{id}', [UserController::class, 'restore'])->name('.restore');
+            Route::get('delete/{id}', [UserController::class, 'delete'])->name('.delete');
         });
         Route::group(['prefix'=>'school', 'as'=> '.school'],function () {
             Route::get('/', [SchoolController::class, 'index'])->name('.index');
@@ -89,39 +103,6 @@ Route::middleware('auth')->group(function () {
             Route::get('restore/{id}', [MajorController::class, 'restore'])->name('.restore');
             Route::post('update', [MajorController::class, 'update'])->name('.update');
             Route::get('action', [MajorController::class, 'action'])->name('.action');
-        });
-        Route::group(['prefix'=>'product', 'as'=> '.product'],function () {
-            //Các route categoryproductController
-            Route::group(['prefix'=>'cat', 'as'=> '.cat'],function () {
-                Route::get('/', [AdminCategoryProductController::class, 'index'])->name('.index');
-                Route::get('list', [AdminCategoryProductController::class, 'index'])->name('.index');
-                Route::get('list/{status}', [AdminCategoryProductController::class, 'index'])->name('.list.status');
-                Route::get('create', [AdminCategoryProductController::class, 'create'])->name('.create');
-                Route::post('store', [AdminCategoryProductController::class, 'store'])->name('.store');
-                Route::get('remove/{id}', [AdminCategoryProductController::class, 'remove'])->name('.remove');
-                Route::get('restore/{id}', [AdminCategoryProductController::class, 'restore'])->name('.restore');
-                Route::get('delete/{id}', [AdminCategoryProductController::class, 'delete'])->name('.delete');
-                Route::get('edit/{id}', [AdminCategoryProductController::class, 'edit'])->name('.edit');
-                Route::post('update/{id}', [AdminCategoryProductController::class, 'update'])->name('.update');
-            });
-            Route::get('/', [AdminProductController::class, 'index'])->name('.index');
-            Route::get('list', [AdminProductController::class, 'index'])->name('.index');
-            Route::get('list/{status}', [AdminProductController::class, 'index'])->name('.list.status');
-            Route::get('create', [AdminProductController::class, 'create'])->name('.create');
-            Route::post('store', [AdminProductController::class, 'store'])->name('.store');
-            Route::get('remove/{id}', [AdminProductController::class, 'remove'])->name('.remove');
-            Route::get('restore/{id}', [AdminProductController::class, 'restore'])->name('.restore');
-            Route::get('delete/{id}', [AdminProductController::class, 'delete'])->name('.delete');
-            Route::get('action', [AdminProductController::class, 'action'])->name('.action');
-            Route::get('edit/{id}', [AdminProductController::class, 'edit'])->name('.edit');
-            Route::post('update/{id}', [AdminProductController::class, 'update'])->name('.update');
-        });
-        Route::group(['prefix'=>'brand', 'as'=> '.brand'],function () {
-            Route::get('/', [AdminBrandController::class, 'index'])->name('.index');
-            Route::get('list', [AdminBrandController::class, 'index'])->name('.index');
-            Route::post('store', [AdminBrandController::class, 'store'])->name('.store');
-            Route::get('edit', [AdminBrandController::class, 'edit'])->name('.edit');
-            Route::get('delete/{id}', [AdminBrandController::class, 'delete'])->name('.delete');
         });
         Route::group(['prefix'=>'feedback', 'as'=> '.feedback'],function () {
             Route::get('/', [AdminFeedbackController::class, 'index'])->name('.index');

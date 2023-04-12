@@ -95,27 +95,46 @@
 
                 <div class="form-group">
                     <label for="type_id">Hệ đào tạo</label>
-                    <select class="form-control" id="" name="type_id">
-                        <option value="">Chọn hệ đào tạo</option>
-                        @foreach($types as $type)
-                        <option value="{{$type->id}}">{{$type->type_name}}</option>
+                    <div class="dropdown-type">
+                        Chọn hệ đào tạo
+                    </div>
+                    <div class="dropdown_inner">
+                        @foreach($types as $item)
+                            <div class="type_checkbox">
+                                <input type="checkbox" value="{{$item->id}}" id="type-{{$item->id}}" name="type[]"/> 
+                                <label for="type-{{$item->id}}">{{$item->type_name}}</label><br/>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="area_id">Khu vực</label>
+                    <select class="form-control" id="area_id" name="area_id">
+                        <option value="">Chọn khu vực</option>
+                        @foreach($areas as $item)
+                        <option value="{{$item->code}}">{{$item->name}}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group">
-                    @php
-                            $url = "https://provinces.open-api.vn/api/p";
-                            $data = file_get_contents($url);
-                            $data = json_decode($data, true);
-                    @endphp
-                    <label for="area_id">Khu vực</label>
-                    <select class="form-control" id="area_id" name="area_id">
-                        <option value="">Chọn khu vực</option>
-                        
-                        @foreach($data as $item)
-                        <option value="{{$item['code']}}">{{$item['name']}}</option>
-                        @endforeach
-                    </select>
+                    <label for="sector">Các ngành đào tạo</label>
+                    <div class="filter-major row">
+                        <input type="text" name="search_major" id="search_major" class="form-control col-6" placeholder="Nhập tên ngành">
+                        <select class="form-control col-6" id="sector" name="sector">
+                            <option value="">Chọn nhóm ngành</option>
+                            @foreach($sectors as $item)
+                            <option value="{{$item['id']}}">{{$item['name']}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="list_major row mt-2" >
+                        <div class="left col-6">
+
+                        </div>
+                        <div class="right col-6">
+
+                        </div>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Thêm mới</button>
             </form>
@@ -123,13 +142,87 @@
     </div>
 </div>
 @endsection
-
 @section("js")
 <script>
-    $(function(){
-    $("#check_add_many").on("click", function() { 
-        $("#add_many").toggle();
+    $(document).ready(function(){
+        var majors = {!! json_encode($majors) !!};
+        var list_major_left = "";
+        var list_major_right = "";
+        var i = 0;
+        majors.forEach(element => {
+            var major_name = element['major_name'];
+            var major_id = element['id'];
+            var sector_id = element['sector_id'];
+            var checked = element['checked'];
+            var major_checkbox = '<div class="form-check" data-sector_id="' +sector_id+ '" ><input class="form-check-input" type="checkbox" name="major[]" id="' + major_id + '" value="' + major_id + '" '+checked+'><label class="form-check-label" for="' + major_id + '">' + major_name + '</label>\
+                </div>';
+                    if(i % 2 == 0) {
+                        list_major_left += major_checkbox;
+                    } else {
+                        list_major_right += major_checkbox;
+                    }
+                i++;  
+            });
+            $('.list_major .left').html(list_major_left);
+            $('.list_major .right').html(list_major_right);
+        //lọc theo nhóm ngành
+        $("#sector").change(function() {
+            var selectedSector = $(this).val();
+            if (selectedSector !== "") {
+            // Show the form-check elements that match the selected sector
+            $('.list_major .form-check').each(function() {
+                var sectorId = $(this).data("sector_id");
+                if (sectorId == selectedSector) {
+                $(this).show();
+                } else {
+                $(this).hide();
+                }
+            });
+            } else {
+            // Show all form-check elements if no sector is selected
+            $('.list_major .form-check').show();
+            }
+        });
+        //search nhóm ngành
+        $("#search_major").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $(".form-check").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        
+        $(".dropdown-type").on("click", function(){
+            $(".dropdown_inner").slideToggle(function() {
+                if ($(this).is(":visible")) {
+                    $(this).css("display", "flex");
+                }
+            });
+        });
+
     });
-});
 </script>
+@endsection
+@section("css")
+<style>
+    .list_major{
+        height:300px; 
+        overflow: scroll;
+        font-size:18px
+    }
+    .dropdown-type{
+        padding: 7px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .dropdown_inner {
+        font-size: 20px;
+        display: none;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .type_checkbox{
+        width: 25%;
+    }
+</style>
 @endsection

@@ -4,6 +4,7 @@ namespace App\Repositories\SchoolType;
 use App\Models\SchoolType;
 use App\Repositories\Repositories;
 use Exception;
+use Cache;
 
 class SchoolTypeRepository extends Repositories implements ISchoolTypeRepository
 {
@@ -30,20 +31,25 @@ class SchoolTypeRepository extends Repositories implements ISchoolTypeRepository
     public function storeSchoolType($request){
         $request->validate(
             [
-                "type_name" => "required|string|max:200"
+                "type_name" => "required|string|max:200",
+                'image' => 'mimes:jpg,png,gif,webp|max:20000'
             ],
             [
                 "required" => ":attribute không được để trống!",
                 "string" => ":attribute phải là một chuỗi!",
-                "max" => ":attribute không vượi quá 200 ký tự!"
+                "max" => ":attribute không vượi quá 200 ký tự!",
+                "mimes" => ":attribute phải có định dạng jpg,png,gif,webp"
             ],
             [
-                "type_name" => "Tên hệ đạo"
+                "type_name" => "Tên hệ đạo",
+                "image" => "Hình ảnh"
             ]
         );
         try{
             $this->SchoolType->create([
-                "type_name" => $request->type_name
+                "type_name" => $request->type_name,
+                "description" => $request->description,
+                "image" => $request->image,
             ]);
             return redirect("admin/school_type")->with('success', "Đã thêm hệ đào tạo thành công!");
         }catch(Exception){
@@ -121,5 +127,15 @@ class SchoolTypeRepository extends Repositories implements ISchoolTypeRepository
 
     public function total(){
 
+    }
+
+    //API
+    public function getAllType(){
+        $types = Cache::get('types');
+        if($types == null){
+            $types = SchoolType::select('id', 'type_name')->get();
+            Cache::put('types',$types, 86400);
+        }
+        return $types;
     }
 }

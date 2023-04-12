@@ -11,4 +11,5 @@ interface ISchoolTypeRepository{
     public function deleteSchoolType($id);
     public function count();
     public function total();
+    public function getAllType();
 }

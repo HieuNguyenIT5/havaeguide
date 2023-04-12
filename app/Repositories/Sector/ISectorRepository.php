@@ -11,4 +11,6 @@ interface ISectorRepository{
     public function deleteSector($id);
     public function count();
     public function total();
+    //Api
+    public function getAllSector();
 }

@@ -24,7 +24,7 @@ use App\Http\Controllers\Admin\RoleController;
 // });
 Auth::routes();
 Route::get('home', [ApiController::class, 'index'])->name('api.home');
-Route::get('product/{code}', [ApiController::class, 'productDetail'])->name('api.product.detail');
+Route::get('schools', [ApiController::class, 'getSchoolFilter'])->name('api.schools');
 Route::get('product/same_category/{cat_id}', [ApiController::class, 'sameCategory'])->name('api.product.same_category');
 Route::get('cat_menu', [ApiController::class, 'getCatMenu'])->name('api.getCatMenu');
 Route::get('product', [ApiController::class, 'listProduct'])->name('api.product.productAll');

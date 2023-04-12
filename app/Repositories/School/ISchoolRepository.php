@@ -12,4 +12,7 @@ interface ISchoolRepository{
     public function deleteSchool($request);
     public function count();
     public function total();
+
+    //Api
+    public function getOutstendingSchools();
 }

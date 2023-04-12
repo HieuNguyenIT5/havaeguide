@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('school_phone', 20)->nullable(); // Số điện thoại của trường, tối đa 20 ký tự, có thể rỗng
             $table->string('school_email', 100)->nullable(); // Địa chỉ email của trường, tối đa 100 ký tự, có thể rỗng
             $table->string('school_website', 200)->nullable(); // Đường dẫn trang web của trường, tối đa 200 ký tự, có thể rỗng
+            $table->text('majors')->nullable();
             $table->text('school_description')->nullable(); // Mô tả về trường, có thể rỗng
             $table->text('school_image')->nullable(); // Đường dẫn đến hình ảnh của trường, có thể rỗng
             $table->unsignedInteger('type_id'); // Khóa ngoại của bảng "school_types"

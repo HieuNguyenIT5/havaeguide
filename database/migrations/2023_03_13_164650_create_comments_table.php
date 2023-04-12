@@ -19,7 +19,6 @@ return new class extends Migration
             $table->unsignedInteger('user_id')->nullable(false);
             $table->text('content')->nullable(false);
             $table->unsignedInteger('reply_to')->nullable();
-            $table->unsignedInteger('user_id');
             $table->timestamps();
         });
     }

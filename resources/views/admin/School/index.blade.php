@@ -29,7 +29,7 @@
                 <a href="{{route('admin.school.status', 'active')}}" class="text-primary">Hoạt động<span class="text-muted">({{$count['school_active']}})</span></a>
                 <a href="{{route('admin.school.status', 'hide')}}" class="text-primary">Ẩn<span class="text-muted">({{$count['school_hide']}})</span></a>
             </div>
-            <form action="{{route('admin.product.action')}}">
+            <form action="{{route('admin.school.action')}}">
                 @csrf
             <div class="form-action py-3 row">
                 <div class="col-6 text-left d-flex align-items-center">
@@ -64,7 +64,6 @@
                         <th scope="col">Tên trường</th>
                         <th scope="col">Địa chỉ</th>
                         <th scope="col">Điện thoại</th>
-                        <th scope="col">Hệ đào tạo</th>
                         <th scope="col">Tác vụ</th>
                     </tr>
                 </thead>
@@ -78,9 +77,8 @@
                         <td style="width:5%; overflow:hidden;"><a href="#">{{$school->school_code}}</a></td>
                         <td ><img style="width:80px; height:80px" src="{{asset('images/'.$school->school_image)}}" alt=""></td>
                         <td style="width:30%; overflow:hidden;"><a href="#">{{$school->school_name}}</a></td>
-                        <td style="width:20%; overflow:hidden;">{{$school->school_address}}</td>
-                        <td>{{$school->school_phone}}</td>
-                        <td>{{$school->type_name}}</td> 
+                        <td style="width:30%; overflow:hidden;">{{$school->school_address}}</td>
+                        <td style="width:20%;">{{$school->school_phone}}</td>
                         <td>
                             @if($school->deleted_at == null)
                             <a href="{{route('admin.school.edit', $school->id)}}" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>

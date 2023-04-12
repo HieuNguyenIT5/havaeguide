@@ -12,4 +12,7 @@ interface IMajorRepository{
     public function deleteMajor($request);
     public function count();
     public function total();
+
+    //Api 
+    public function getAllMajor();
 }

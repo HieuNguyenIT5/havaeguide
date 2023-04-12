@@ -6,7 +6,7 @@ use App\Models\Sector;
 use App\Repositories\Repositories;
 use Illuminate\Validation\Rule;
 use Exception;
-use GuzzleHttp\Psr7\Message;
+use Cache;
 
 class MajorRepository extends Repositories implements IMajorRepository
 {
@@ -59,7 +59,7 @@ class MajorRepository extends Repositories implements IMajorRepository
             $this->major->create($major);
                 return redirect()->back()->with("success", "Thêm ngành đào tạo thành công!");
         }catch(Exception $ex){
-            return rredirect()->back()->with("danger", "Thêm ngành đào tạo thất bại!".$ex->getMessage());
+            return redirect()->back()->with("danger", "Thêm ngành đào tạo thất bại!".$ex->getMessage());
         }
     }
 
@@ -178,5 +178,16 @@ class MajorRepository extends Repositories implements IMajorRepository
 
     public function total(){
 
+    }
+
+    //API
+
+    public function getAllMajor(){
+        $majors = Cache::get('majors');
+        if($majors == null){
+            $majors = Major::select('id', 'major_name', 'sector_id')->get();
+            Cache::put('majors',$majors, 86400);
+        }
+        return $majors;
     }
 }

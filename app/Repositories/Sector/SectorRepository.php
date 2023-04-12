@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Repositories\Sector;
 
 use App\Models\Sector;
 use App\Repositories\Repositories;
 use Exception;
+use Cache;
 
 class SectorRepository extends Repositories implements ISectorRepository
 {
@@ -17,17 +19,18 @@ class SectorRepository extends Repositories implements ISectorRepository
     {
         $Sectors = $this->getModelWithStatus($status, $this->Sector);
         $search = '';
-        if($request->keyword){
+        if ($request->keyword) {
             $search  = $request->keyword;
             $Sectors = $Sectors->where('sector_name', 'like', "%{$search}%");
         }
-        $Sectors  = $Sectors->paginate(10);
+        $Sectors  = $Sectors->paginate(17);
         $count    = $this->count();
         $list_act = $this->getListStatus($status);
-        
+
         return view('admin.sector.index', compact("Sectors", "count", "list_act"));
     }
-    public function storeSector($request){
+    public function storeSector($request)
+    {
         $request->validate(
             [
                 "name" => "required|string|max:200"
@@ -41,18 +44,25 @@ class SectorRepository extends Repositories implements ISectorRepository
                 "name" => "Tên nhóm ngành"
             ]
         );
-        try{
+        try {
+            if (!empty($request->file('image'))) {
+                $fileName = 'sector_' . time() . '.' . $request->image->extension();
+                $request->image->move(public_path("images"), $fileName);
+                $image = $fileName;
+            } else $image = 'image_blank.jpg';
             $this->Sector->create([
                 "name" => $request->name,
-                "description" => $request->description
+                "description" => $request->description,
+                "image" => $image,
             ]);
             return redirect()->back()->with('success', "Đã thêm nhóm ngành thành công!");
-        }catch(Exception $ex){
-            return redirect()->back()->with('danger', "Thêm nhóm ngành thất bại! ".$ex->getMessage());
+        } catch (Exception $ex) {
+            return redirect()->back()->with('danger', "Thêm nhóm ngành thất bại! " . $ex->getMessage());
         }
     }
 
-    public function updateSector($request){
+    public function updateSector($request)
+    {
         $request->validate(
             [
                 "name" => "required|string|max:200"
@@ -66,55 +76,78 @@ class SectorRepository extends Repositories implements ISectorRepository
                 "name" => "Tên nhóm ngành"
             ]
         );
-        try{
+        try {
+            $currentSector = $this->Sector->find($request->id);
+
+            if (!empty($currentSector->image)) {
+                $imagePath = public_path("images") . '/' . $currentSector->image;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+
+            if (!empty($request->file('image'))) {
+                $fileName = 'sector_' . time() . '.' . $request->image->extension();
+                $request->image->move(public_path("images"), $fileName);
+                $image = $fileName;
+            } else {
+                $image = 'image_blank.jpg';
+            }
+
             $data = [
-                'name' => $request->name,
-                'description' => $request->description
+                "name" => $request->name,
+                "description" => $request->description,
+                "image" => $image,
             ];
-            $this->Sector->find($request->id)->update($data);
+
+            $currentSector->update($data);
             return redirect()->back()->with('success', "Đã cập nhật nhóm ngành thành công!");
-        }catch(Exception){
+        } catch (Exception) {
             return redirect()->back()->with('danger', "Cập nhật nhóm ngành thất bại!");
         }
     }
-    public function editSector($id){;
+    public function editSector($id)
+    {;
         $sector = $this->Sector->find($id)->first();
         return response()->json($sector);
     }
 
-    public function removeSector($id){
-        try{
+    public function removeSector($id)
+    {
+        try {
             $this->Sector->find($id)->delete();
             return redirect()->back()->with('success', "Ẩn nhóm ngành thành công!");
-        }catch(Exception){
+        } catch (Exception) {
             return redirect()->back()->with('success', "Ẩn nhóm ngành thất bại!");
         }
     }
 
-    public function restoreSector($id){
-        try{
+    public function restoreSector($id)
+    {
+        try {
             $type = $this->Sector->withTrashed()->find($id);
-            if($type != null){
+            if ($type != null) {
                 $type->restore();
                 return redirect()->back()->with('success', "Hiện thị nhóm ngành thành công!");
             }
             return redirect()->back()->with('danger', "Không có nhóm ngành nào như thế!");
-        }catch(Exception){
+        } catch (Exception) {
             return redirect()->back()->with('success', "Hiển thị nhóm ngành thất bại!");
         }
     }
 
-    public function deleteSector($id){
-        try{
+    public function deleteSector($id)
+    {
+        try {
             $sector = $this->Sector->withTrashed()->find($id);
             dd($sector);
-            if($sector != null){
+            if ($sector != null) {
                 $sector->forceDelete();
                 return redirect()->back()->with('success', "Xóa nhóm ngành thành công!");
-            }else {
+            } else {
                 return redirect()->back()->with('danger', "Không tồn tại nhón ngành đó!");
             }
-        }catch(Exception){
+        } catch (Exception) {
             return redirect()->back()->with('danger', "Xóa nhóm ngành thất bại!");
         }
     }
@@ -127,7 +160,20 @@ class SectorRepository extends Repositories implements ISectorRepository
         return $count;
     }
 
-    public function total(){
+    public function total()
+    {
+    }
 
+    //Api
+
+    public function getAllSector()
+    {
+        $sectors = Cache::get('sectors');
+
+        if ($sectors == null) {
+            $sectors = Sector::select('id', 'name', 'image')->get();
+            Cache::put('sectors', $sectors, 86400);
+        }
+        return $sectors;
     }
 }

@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Repositories\Product\ProductRepositoryInterface;
-use App\Repositories\Slider\SliderRepository;
-use App\Repositories\CategoryProduct\CategoryRepository;
-use App\Repositories\Brand\BrandRepositoryInterface;
-use Exception;
 
+use Illuminate\Http\Request;
+use App\Repositories\Slider\SliderRepository;
+use App\Repositories\Sector\ISectorRepository;
+use App\Repositories\School\ISchoolRepository;
+use App\Repositories\Major\IMajorRepository;
+use App\Repositories\SchoolType\ISchoolTypeRepository;
+use App\Repositories\Repositories;
+use Exception;
+use Illuminate\Cache\Repository;
 class ApiController extends Controller
 {
     /**
@@ -17,16 +20,22 @@ class ApiController extends Controller
      *
      * @return void
      */
-    private $productRepo;
+    private $sectorRepo;
     private $sliderRepo;
-    private $catRepo;
-    private $brandRepo;
-    public function __construct(ProductRepositoryInterface $productRepo, SliderRepository $sliderRepo, CategoryRepository $catRepo, BrandRepositoryInterface $brandRepo)
+    private $schoolRepo;
+    private $majorRepo;
+    private $typeRepo;
+    private $Repo;
+
+    public function __construct(ISchoolRepository $schoolRepo, ISectorRepository $sectorRepo, SliderRepository $sliderRepo, Repositories $repo, IMajorRepository $majorRepo, ISchoolTypeRepository $typeRepo)
     {
-        $this->productRepo = $productRepo;
         $this->sliderRepo = $sliderRepo;
-        $this->catRepo = $catRepo;
-        $this->brandRepo = $brandRepo;
+        $this->sectorRepo = $sectorRepo;
+        $this->schoolRepo = $schoolRepo;
+        $this->majorRepo = $majorRepo;
+        $this->typeRepo = $typeRepo;
+
+        $this->Repo = $repo;
     }
 
     /**
@@ -35,77 +44,51 @@ class ApiController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-    public function index(){
-        try{
+    public function index()
+    {
+        try {
             $sliders = $this->sliderRepo->getSliderShow();
-            $sellingProducts = $this->productRepo->getSellingProducts();
-            $products = $this->productRepo->getProductByCategory();
+            $sectors = $this->sectorRepo->getAllSector();
+            $outstandingSchools = $this->schoolRepo->getOutstendingSchools();
+            $areaCenters = $this->Repo->getAreaCenter();
             return response()->json(
                 [
-                    "sliders" => $sliders,
-                    "selling_products" => $sellingProducts,
-                    "products" => $products,
                     "status" => 200,
-                    "message" => "OK"
-                ]
+                    "sliders" => $sliders,
+                    "sectors" => $sectors,
+                    "outstanding_schools" => $outstandingSchools,
+                    "area_centers" => $areaCenters
+                ],
+                200
             );
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json(
                 [
                     "status" => 500,
                     "message" => $e->getMessage()
-                ],500
+                ],
+                500
             );
         }
     }
 
-    public function getCatMenu(){
-        try{
-            $data = $this->catRepo->getCatMenu();
-            return response()->json(
-                [
-                    "CatMenu" => $data
-                ]
-            );
-        }catch(Exception $e){
-            if($e->getCode() == '2002'){
-                return response()->json(
-                    [
-                        "status" => 500,
-                        "message" => "Không kết nối được với server!"
-                    ],500
-                );
-            }elseif($e->getCode() == '42S02')
-            return response()->json(
-                [
-                    "status" => $e->getCode(),
-                    "message" => $e->getMessage()
-                ],500
-            );
-        }
-    }
-
-    public function productDetail($code){
-        $product = $this->productRepo->findByCode($code);
-        return response()->json([
-            "product"=> $product,
-        ]);
-    }
-
-    public function sameCategory($cat_id){
-        $products = $this->productRepo->getProductByCatId($cat_id);
-        return response()->json([
-            'products' => $products
-        ]);
-    }
-    public function listProduct(Request $request){
-        $products = $this->productRepo->getProductFilter($request->all());
-        $categorys = $this->catRepo->getCatName();
-        $brands = $this->brandRepo->getBrandName();
-        return response()->json([
-            'categorys' => $categorys,
-            'brands' => $brands,
-            'products' => $products
-        ]);
+    public function getSchoolFilter($id = 0)
+    {
+        $sectors = $this->sectorRepo->getAllSector();
+        $majors = $this->majorRepo->getAllMajor();
+        $areas = $this->Repo->getArea();
+        $types = $this->typeRepo->getAllType();
+        $schools = $this->schoolRepo->getAllSchool();
+        return response()->json(
+            [
+                "status" => 200,
+                "sectors" => $sectors,
+                "majors" => $majors,
+                "areas" => $areas,
+                "school_types" => $types,
+                "schools"=>$schools
+            ],
+            200
+        );
     }
 }

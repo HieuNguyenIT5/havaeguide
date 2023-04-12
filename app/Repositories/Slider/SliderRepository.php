@@ -35,7 +35,7 @@ class SliderRepository
             ]
         );
         if(!empty($request->file('image'))) {
-            $fileName = time() . '.' . $request->image->extension();
+            $fileName = "slider_".time() . '.' . $request->image->extension();
             $request->image->move(public_path("images"), $fileName);
             return $this->slider->create([
                 'url' => $fileName

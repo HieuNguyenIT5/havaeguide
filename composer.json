@@ -11,8 +11,9 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.1",
+        "maatwebsite/excel": "^3.1.x-dev",
         "phpoffice/phpspreadsheet": "1.28.0",
-        "maatwebsite/excel": "^3.1.x-dev"
+        "predis/predis": "^2.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

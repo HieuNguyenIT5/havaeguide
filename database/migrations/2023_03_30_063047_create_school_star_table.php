@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sectors', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name', 50)->nullable(false);
-            $table->text('description')->nullable();
-            $table->string('image')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::create('school_star', function (Blueprint $table) {
+            $table->unsignedInteger('school_id');
+            $table->double('start');
+            $table->primary('school_id');
+            $table->foreign('school_id')->references('id')->on('schools');
         });
     }
 
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sectors');
+        Schema::dropIfExists('school_star');
     }
 };
