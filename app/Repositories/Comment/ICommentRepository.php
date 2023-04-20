@@ -15,5 +15,5 @@ interface ICommentRepository{
 
     //Api
     public function getCommentsBySchoolCode($code);
-    public function getComment($code);
+    public function addComment($request);
 }

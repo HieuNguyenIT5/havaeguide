@@ -1,7 +1,9 @@
 <?php
 namespace App\Repositories;
+use App\Models\School;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Repositories{
 
@@ -55,8 +57,17 @@ class Repositories{
         $areas = Redis::get("areas");
         if(is_null($areas)){
             $data = file_get_contents($this->url);
-            $areas = json_decode($data, true);
-            Redis::set("areas", $areas);
+            $schools = School::select('area_id',  DB::raw('count(id) as num_school'))->groupBy('area_id')->get();
+            $areas = json_decode($data);
+            foreach ($areas as &$area){
+                $matching_schools = $schools->where('area_id', $area->code)->first();
+                if($matching_schools != null && $matching_schools->num_school > 0){
+                    $area->count = $matching_schools->num_school;
+                }else{
+                    $area->count = 0;
+                }
+            }
+            Redis::set("areas", json_encode($areas));
         }else{
             $areas = json_decode($areas);
         }

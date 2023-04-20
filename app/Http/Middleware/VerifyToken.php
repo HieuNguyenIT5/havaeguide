@@ -17,8 +17,8 @@ class VerifyToken
      */
     public function handle(Request $request, Closure $next)
     {
-        $checkToken = SessionUser::where('token', $request->token)->first();
-        if(empty($request->token)){
+        $checkToken = SessionUser::where('token', $request->header('token'))->first();
+        if(empty($request->header('token'))){
             return response()->json([
                 'status'=>401,
                 'message'=>'Bạn không gửi token lên!'

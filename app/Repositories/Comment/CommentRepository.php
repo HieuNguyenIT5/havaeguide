@@ -4,6 +4,7 @@ namespace App\Repositories\Comment;
 use App\Models\Comment;
 use App\Models\Major;
 use App\Models\Sector;
+use App\Models\SessionUser;
 use App\Repositories\Repositories;
 use Illuminate\Validation\Rule;
 use Exception;
@@ -190,10 +191,21 @@ class CommentRepository extends Repositories implements ICommentRepository
             ->where('schools.school_code', $code)
             ->select('comments.user_id', 'users.avatar', 'users.name as user_name', 'comments.content', 'comments.created_at')
             ->get();
-    }
-    public function getComment($code){
-        return $this->comment
-            ->join('schools', 'school_id', 'id')
-            ->where('schools.school_code', $code);
+        }
+    public function addComment($request){
+        $user = SessionUser::where('token', $request->header('token'))
+            ->select('user_id')
+            ->first();
+        $comment = [
+            "user_id" => $user->user_id,
+            "school_id" => $request->school_id,
+            "content" =>$request->content
+        ];
+        try{
+            return $this->comment->create($comment);
+        }catch(Exception $e)
+        {
+            return null;
+        }
     }
 }

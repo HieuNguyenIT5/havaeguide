@@ -243,12 +243,16 @@ class SchoolRepository extends Repositories implements ISchoolRepository
             return null;
         }
     }
-    public function getAllSchool()
+    public function getAllSchool($s)
     {
-        $schools = Cache::get('schools');
-        if($schools == null){
-            $schools = School::get();
-            Cache::put('schools',$schools, 86400 /* ~ 1 ngày */);
+        if($s != ""){
+            $schools = School::where('school_name', 'like', "%{$s}%")->get();
+        }else{
+            $schools = Cache::get('schools');
+            if($schools == null){
+                $schools = School::get();
+                Cache::put('schools',$schools, 86400 /* ~ 1 ngày */);
+            }
         }
         return $schools;
     }

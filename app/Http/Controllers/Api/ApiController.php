@@ -88,13 +88,14 @@ class ApiController extends Controller
         }
     }
 
-    public function getAllSchool($id = 0)
+    public function getAllSchool(Request $request)
     {
+        $s = $request->input('s');
         $sectors = $this->sectorRepo->getAllSector();
         $majors = $this->majorRepo->getAllMajor();
         $areas = $this->Repo->getArea();
         $types = $this->typeRepo->getAllType();
-        $schools = $this->schoolRepo->getAllSchool();
+        $schools = $this->schoolRepo->getAllSchool($s);
         return response()->json(
             [
                 "status" => 200,
@@ -143,7 +144,14 @@ class ApiController extends Controller
             ],404);
         }
     }
-
+    public function getAllArea()
+    {
+        $areas = $this->Repo->getArea();
+        return response()->json([
+            "code" => 200,
+            "areas" => $areas
+        ],200);
+    }
     public function getPage($slug)
     {
         $page = $this->pageRepo->getPage($slug);
@@ -172,5 +180,19 @@ class ApiController extends Controller
             "code" => 200,
             "comments" => $this->commentRepo->getCommentsBySchoolCode($code)
         ]);
+    }
+    public function  addComment(Request $request){
+        $comment = $this->commentRepo->addComment($request);
+        if($comment){
+            return response()->json([
+               "code" => 200,
+               "data" => $comment
+            ]);
+        }else{
+            return response()->json([
+                "code" => 400,
+                "message" => "Thêm comment thất bại!"
+            ],400);
+        }
     }
 }

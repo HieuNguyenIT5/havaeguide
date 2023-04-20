@@ -207,7 +207,7 @@ class UserRepository implements IUserRepository
             }
     }
     public function logout($request){
-        $userSession = SessionUser::where('token', $request->token);
+        $userSession = SessionUser::where('token', $request->header('token'));
         if($userSession){
             $userSession->delete();
             return response()->json([
@@ -222,7 +222,7 @@ class UserRepository implements IUserRepository
     }
     public function getUserInfo($request){
         {
-            $checkToken = SessionUser::where('token', $request->token)->first();
+            $checkToken = SessionUser::where('token', $request->header('token'))->first();
             $id = $checkToken->user_id;
             return response()->json([
                 'status'=>200,

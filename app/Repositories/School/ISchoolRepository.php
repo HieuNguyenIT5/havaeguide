@@ -15,7 +15,7 @@ interface ISchoolRepository{
 
     //Api
     public function getOutstendingSchools();
-    public function getAllSchool();
+    public function getAllSchool($s);
     public function getSchool($school_code);
     public function getSchoolBySectorId($sector_id);
 }
