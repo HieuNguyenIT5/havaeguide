@@ -83,12 +83,25 @@
                 <div class="form-group">
                     <label for="image">Logo trường</label>
                     <div>
-                        <input type="file" name="school_image" id="school_image" accept="image/gif, image/jpeg, image/png" onchange="loadFile(event)">
-                        <div class="avatar-img">
-                            <img id="image-show" src="{{asset('images/image_blank.jpg')}}" alt="Ảnh minh họa">
+                        <input type="file" name="school_logo" id="school_logo_file" accept="image/gif, image/jpeg, image/png" onchange="loadFileLogo(event)">
+                        <div class="image">
+                            <img id="school_logo" class="image-show" src="{{asset('images/image_blank.jpg')}}" alt="Ảnh minh họa">
                         </div>
                     </div>
-                    @error('image')
+                    @error('school_logo')
+                    <small class="text-danger">{{$message}}</small>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Banner trường</label>
+                    <div>
+                        <input type="file" name="school_image" id="school_image_file" accept="image/gif, image/jpeg, image/png" onchange="loadFileImage(event)">
+                        <div class="image">
+                            <img id="school_image" class="image-show" src="{{asset('images/image_blank.jpg')}}" alt="Ảnh minh họa">
+                        </div>
+                    </div>
+                    @error('school_image')
                     <small class="text-danger">{{$message}}</small>
                     @enderror
                 </div>
@@ -101,7 +114,7 @@
                     <div class="dropdown_inner">
                         @foreach($types as $item)
                             <div class="type_checkbox">
-                                <input type="checkbox" value="{{$item->id}}" id="type-{{$item->id}}" name="type[]"/> 
+                                <input type="checkbox" value="{{$item->id}}" id="type-{{$item->id}}" name="type[]"/>
                                 <label for="type-{{$item->id}}">{{$item->type_name}}</label><br/>
                             </div>
                         @endforeach
@@ -161,7 +174,7 @@
                     } else {
                         list_major_right += major_checkbox;
                     }
-                i++;  
+                i++;
             });
             $('.list_major .left').html(list_major_left);
             $('.list_major .right').html(list_major_right);
@@ -190,7 +203,7 @@
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
-        
+
         $(".dropdown-type").on("click", function(){
             $(".dropdown_inner").slideToggle(function() {
                 if ($(this).is(":visible")) {
@@ -205,7 +218,7 @@
 @section("css")
 <style>
     .list_major{
-        height:300px; 
+        height:300px;
         overflow: scroll;
         font-size:18px
     }

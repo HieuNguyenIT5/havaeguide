@@ -3,7 +3,7 @@
 namespace App\Repositories\School;
 
 interface ISchoolRepository{
-    public function getSchool($request, $status);
+    public function getSchools($request, $status);
     public function createSchool();
     public function storeSchool($request);
     public function editSchool($id);
@@ -15,4 +15,7 @@ interface ISchoolRepository{
 
     //Api
     public function getOutstendingSchools();
+    public function getAllSchool();
+    public function getSchool($school_code);
+    public function getSchoolBySectorId($sector_id);
 }

@@ -61,18 +61,17 @@
                             Dashboard
                         </a>
                     </li>
-                    <li class="nav-link {{$module_active == 'post' ? 'active': ''}}">
-                        <a href="{{url('/admin/post/list')}}">
+                    <li class="nav-link {{$module_active == 'page' ? 'active': ''}}">
+                        <a href="{{url('/admin/page')}}">
                             <div class="nav-link-icon d-inline-flex">
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </div>
-                            Bài viết
+                            Trang tĩnh
                         </a>
                         <i class="arrow fas fa-angle-right"></i>
                         <ul class="sub-menu">
-                            <li><a href="{{url('/admin/post/create')}}">Thêm mới</a></li>
-                            <li><a href="{{url('/admin/post/list')}}">Danh sách</a></li>
-                            <li><a href="{{url('/admin/post/cat/list')}}">Danh mục</a></li>
+                            <li><a href="{{url('/admin/page/create')}}">Thêm mới</a></li>
+                            <li><a href="{{url('/admin/page')}}">Danh sách</a></li>
                         </ul>
                     </li>
                     <li class="nav-link {{$module_active == 'slider' ? 'active': ''}}">
@@ -116,16 +115,12 @@
                         </ul>
                     </li>
                     <li class="nav-link {{$module_active == 'order' ? 'active': ''}}">
-                        <a href="{{url('/admin/order/list')}}">
+                        <a href="{{route('admin.question.index')}}">
                             <div class="nav-link-icon d-inline-flex">
                                 <i class="fa-solid fa-list-check"></i>
                             </div>
                             Hỏi đáp
                         </a>
-                        <i class="arrow fas fa-angle-right"></i>
-                        <ul class="sub-menu">
-                            <li><a href="{{url('/admin/order/list')}}">Đơn hàng</a></li>
-                        </ul>
                     </li>
                     <li class="nav-link {{$module_active == 'feedback' ? 'active': ''}}">
                         <a href="{{url('/admin/feedback/list')}}">

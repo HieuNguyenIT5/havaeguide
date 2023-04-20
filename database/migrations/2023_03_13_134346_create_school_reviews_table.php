@@ -14,10 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('school_reviews', function (Blueprint $table) {
-            $table->increments('user_id');
-            $table->timestamps('school_id');
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('school_id');
             $table->integer('start');
             $table->text('content');
+            $table->primary('user_id', 'school_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('school_id')->references('id')->on('schools');
+            $table->timestamps();
         });
     }
 

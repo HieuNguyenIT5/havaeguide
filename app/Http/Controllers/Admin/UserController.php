@@ -8,13 +8,13 @@ use App\Models\UserRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Repositories\User\UserRepositoryInterface;
+use App\Repositories\User\IUserRepository;
 
 class UserController extends Controller
 {
     //
     protected $userRepository;
-    function __construct(UserRepositoryInterface $userRepository)
+    function __construct(IUserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
         $this->middleware(function($request, $next){

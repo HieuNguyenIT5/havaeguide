@@ -19,8 +19,9 @@ class SectorController extends Controller
         });
     }
 
-    public function index(Request $request, $status = ''){
-        return $this->sectorRepo->getSector($request, $status);
+    public function index(Request $request, $status = '')
+    {
+        return $this->sectorRepo->getSectors($request, $status);
     }
     public function store(Request $request){
         return $this->sectorRepo->storeSector($request);

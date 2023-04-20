@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\SchoolTypeController;
 use App\Http\Controllers\Admin\SectorController;
 use App\Http\Controllers\Admin\MajorController;
+use App\Http\Controllers\Admin\QuestionController;
+use App\Http\Controllers\Admin\PageController;
 
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminBrandController;
@@ -104,6 +106,32 @@ Route::middleware('auth')->group(function () {
             Route::post('update', [MajorController::class, 'update'])->name('.update');
             Route::get('action', [MajorController::class, 'action'])->name('.action');
         });
+
+        Route::group(['prefix'=>'question', 'as'=> '.question'],function () {
+            Route::get('/', [QuestionController::class, 'index'])->name('.index');
+            Route::get('list/{status}', [QuestionController::class, 'index'])->name('.status');
+            Route::get('create', [QuestionController::class, 'create'])->name('.create');
+            Route::post('store', [QuestionController::class, 'store'])->name('.store');
+            Route::post('import', [QuestionController::class, 'importExcel'])->name('.import');
+            Route::post('export', [QuestionController::class, 'excelExport'])->name('.export');
+            Route::get('delete/{id}', [QuestionController::class, 'delete'])->name('.delete');
+            Route::get('edit', [QuestionController::class, 'edit'])->name('.edit');
+            Route::get('remove/{id}', [QuestionController::class, 'remove'])->name('.remove');
+            Route::get('restore/{id}', [QuestionController::class, 'restore'])->name('.restore');
+            Route::post('update', [QuestionController::class, 'update'])->name('.update');
+            Route::get('action', [QuestionController::class, 'action'])->name('.action');
+        });
+
+        Route::group(['prefix'=>'page', 'as'=> '.page'],function () {
+            Route::get('/', [PageController::class, 'index'])->name('.index');
+            Route::get('list/{status}', [PageController::class, 'index'])->name('.status');
+            Route::get('create', [PageController::class, 'create'])->name('.create');
+            Route::post('store', [PageController::class, 'store'])->name('.store');
+            Route::get('delete/{id}', [PageController::class, 'delete'])->name('.delete');
+            Route::Get('edit/{id}', [PageController::class, 'edit'])->name('.edit');
+            Route::post('update/{id}', [PageController::class, 'update'])->name('.update');
+        });
+
         Route::group(['prefix'=>'feedback', 'as'=> '.feedback'],function () {
             Route::get('/', [AdminFeedbackController::class, 'index'])->name('.index');
             Route::get('list', [AdminFeedbackController::class, 'index'])->name('.index');

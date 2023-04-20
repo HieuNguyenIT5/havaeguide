@@ -7,7 +7,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-class UserRepository implements UserRepositoryInterface
+use function Symfony\Component\Mime\Header\has;
+
+class UserRepository implements IUserRepository
 {
     private $user;
     public function __construct(User $user)
@@ -138,23 +140,20 @@ class UserRepository implements UserRepositoryInterface
             [
                 'name'=> 'required|string|max:255',
                 'email'=>'required|string|email|max:255|unique:users',
-                'password'=> 'required|string|min:8|confirmed',
                 'phone'=> 'string|digits:10',
-                'avatar' => 'mimes:jpg,png,gif|max:20000',
+                //'avatar' => 'mimes:jpg,png,gif|max:20000',
             ],
             [
                 'required'=> ':attribute không được bỏ trống!',
                 'min'=> ':attribute có độ dài ít nhất :min ký tự!',
                 'max'=> ':attribute có độ dài lớn nhất :max ký tự!',
-                'confirmed'=> 'Xác nhận mật khẩu không thành công!',
                 'unique'=> ':attribute đã được sử dụng',
-                'mimes'=> ':attribute phải có định dạng jpg, png, gif!',
+                //'mimes'=> ':attribute phải có định dạng jpg, png, gif!',
             ],
             [
                 'name'=>'Tên người dùng',
                 'email'=>'Email',
-                'password'=>'Mật khẩu',
-                'avatar'=>'Ảnh đại diện',
+                //'avatar'=>'Ảnh đại diện',
                 'phone'=>'Số điện thoại',
             ]
         );
@@ -171,15 +170,9 @@ class UserRepository implements UserRepositoryInterface
             $request->avatar->move(public_path("images"), $fileName);
             $avatar = $fileName;
         }
-        $user = [
-            'name' =>$request->input('name'),
-            'email' =>$request->input('email'),
-            'gender' =>$request->input('gender'),
-            'phone' =>$request->input('phone'),
-            'password' => Hash::make($request->input('password')),
-            'avatar' =>$avatar,
-        ];
 
+        $user = $request->except(['_token']);
+        $user['password'] = Hash::make($user['password']);
         return [
             'code' => 201,
             'data' => $this->user->create($user)
@@ -230,9 +223,10 @@ class UserRepository implements UserRepositoryInterface
     public function getUserInfo($request){
         {
             $checkToken = SessionUser::where('token', $request->token)->first();
+            $id = $checkToken->user_id;
             return response()->json([
                 'status'=>200,
-                'info'=>User::find($checkToken->user_id)->only(['name', 'avatar'])
+                'info'=> User::select('name', 'avatar')->find($id)
             ],200);
         }
     }

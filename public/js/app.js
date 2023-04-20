@@ -12,12 +12,19 @@ $(document).ready(function () {
         $('.table-checkall tbody tr td input:checkbox').prop('checked', checked);
     });
 });
-var loadFile = function (event) {
-    var output = document.getElementById('image-show');
+var loadFile = function (output) {
     output.src = URL.createObjectURL(event.target.files[0]);
     output.onload = function () {
         URL.revokeObjectURL(output.src) // free memory
     }
+};
+var loadFileLogo = function (event) {
+    var output = document.getElementById('school_logo');
+    loadFile(output);
+};
+var loadFileImage = function (event) {
+    var output = document.getElementById('school_image');
+    loadFile(output);
 };
 
 

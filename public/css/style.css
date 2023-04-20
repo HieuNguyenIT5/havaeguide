@@ -63,14 +63,12 @@ a:hover {
 .card-body .card-header {
     text-transform: uppercase;
 }
-.card-body .avatar-img{
+.card-body .image{
     margin-top: 20px;
-    width: 300px;
     height: 300px;
     overflow: hidden;
 }
-.card-body .avatar-img img{
-    width: 100%;
+.card-body .image img{
     height: 100%;
 }
 
@@ -139,10 +137,6 @@ ul#sidebar-menu * {
 
 #page-body {
     background-color: #e5e9f0;
-}
-
-.form-search {
-    width: 303px;
 }
 
 .table tr td {

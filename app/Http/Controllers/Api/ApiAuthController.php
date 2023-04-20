@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\User\UserRepositoryInterface;
+use App\Repositories\User\IUserRepository;
 use Illuminate\Support\Facades\Auth;
 
 class ApiAuthController extends Controller
 {
     protected $userRepo;
 
-    function __construct(UserRepositoryInterface $userRepo)
+    function __construct(IUserRepository $userRepo)
     {
         $this->userRepo = $userRepo;
     }
@@ -21,9 +21,9 @@ class ApiAuthController extends Controller
     {
 
         $response = $this->userRepo->register($request);
-        return response()->json([
+        return response()->json(
             $response
-        ], $response['code']);
+        , $response['code']);
     }
 
     public function login(Request $request)
@@ -36,5 +36,5 @@ class ApiAuthController extends Controller
     public function getUserInfo(Request $request){
         return $this->userRepo->getUserInfo($request);
     }
-    
+
 }

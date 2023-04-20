@@ -15,6 +15,22 @@ class Repositories{
         }
         return $model;
     }
+    public function saveImage($request, $column, $imageOld = null){
+        if ($request->hasFile($column)) {
+            $image = $request->file($column);
+            $fileName = $column.time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images'), $fileName);
+            //Xóa file ảnh cũ
+            $imagePath = public_path("images") . '/' . $imageOld;
+            if ($imageOld != null && file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+            return $fileName;
+        }else{
+            return $imageOld;
+        }
+    }
+
     public function getListStatus($status){
         if($status == 'hide'){
             $list_act = [

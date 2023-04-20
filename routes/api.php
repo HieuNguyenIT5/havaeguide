@@ -24,10 +24,11 @@ use App\Http\Controllers\Admin\RoleController;
 // });
 Auth::routes();
 Route::get('home', [ApiController::class, 'index'])->name('api.home');
-Route::get('schools', [ApiController::class, 'getSchoolFilter'])->name('api.schools');
-Route::get('product/same_category/{cat_id}', [ApiController::class, 'sameCategory'])->name('api.product.same_category');
-Route::get('cat_menu', [ApiController::class, 'getCatMenu'])->name('api.getCatMenu');
-Route::get('product', [ApiController::class, 'listProduct'])->name('api.product.productAll');
+Route::get('schools', [ApiController::class, 'getAllSchool'])->name('api.schools');
+Route::get('school/{school_code}', [ApiController::class, 'getSchool'])->name('api.school');
+Route::get('sector/{sector_id}', [ApiController::class, 'getSector'])->name('api.sector');
+Route::get('page/{slug}', [ApiController::class, 'getPage'])->name('api.page.getPage');
+Route::get('comment/{code}', [ApiController::class, 'getAllComment'])->name('api.comment.getAllComment');
 
 
 Route::post('register', [ApiAuthController::class, 'register'])->name('api.register');
@@ -35,7 +36,7 @@ Route::post('login', [ApiAuthController::class, 'login'])->name('api.login');
 
 Route::middleware('token.verify')->group(function () {
     Route::get('logout', [ApiAuthController::class, 'logout'])->name('api.logout');
-    Route::get('user-info', [ApiAuthController::class, 'getUserInfo'])->name('api.getUserInfo');
+    Route::get('user_info', [ApiAuthController::class, 'getUserInfo'])->name('api.getUserInfo');
     Route::post('cart/add', [ApiCartController::class, 'addToCart'])->name('api.addToCart');
     Route::get('cart', [ApiCartController::class, 'getCart'])->name('api.getCart');
 });

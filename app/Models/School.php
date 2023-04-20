@@ -11,4 +11,9 @@ class School extends Model
     use SoftDeletes;
     use HasFactory;
     protected $guarded = [];
+
+    public function majors()
+    {
+        return $this->belongsToMany(Major::class, 'school_majors');
+    }
 }

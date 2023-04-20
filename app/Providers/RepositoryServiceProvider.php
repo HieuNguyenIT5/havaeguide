@@ -22,17 +22,30 @@ class RepositoryServiceProvider extends ServiceProvider
             "App\Repositories\SchoolType\ISchoolTypeRepository", "App\Repositories\SchoolType\SchoolTypeRepository"
         );
         $this->app->bind(
-            "App\Repositories\Sector\ISectorRepository", "App\Repositories\Sector\SectorRepository"
+            "App\Repositories\Sector\ISectorRepository",
+            "App\Repositories\Sector\SectorRepository"
         );
         $this->app->bind(
-            "App\Repositories\Major\IMajorRepository", "App\Repositories\Major\MajorRepository"
+            "App\Repositories\Major\IMajorRepository",
+            "App\Repositories\Major\MajorRepository"
+        );
+        $this->app->bind(
+            "App\Repositories\Question\IQuestionRepository",
+            "App\Repositories\Question\QuestionRepository"
         );
 
         $this->app->bind(
-            "App\Repositories\Product\ProductRepositoryInterface", "App\Repositories\Product\ProductRepository"
+            "App\Repositories\Page\IPageRepository",
+            "App\Repositories\Page\PageRepository"
         );
         $this->app->bind(
-            "App\Repositories\User\UserRepositoryInterface", "App\Repositories\User\UserRepository"
+            "App\Repositories\Comment\ICommentRepository",
+            "App\Repositories\Comment\CommentRepository"
+        );
+
+        $this->app->bind(
+            "App\Repositories\User\IUserRepository",
+            "App\Repositories\User\UserRepository"
         );
         $this->app->bind(
             "App\Repositories\Brand\BrandRepositoryInterface", "App\Repositories\Brand\BrandRepository"

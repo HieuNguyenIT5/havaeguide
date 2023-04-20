@@ -4,15 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 
+use App\Repositories\Comment\ICommentRepository;
 use Illuminate\Http\Request;
 use App\Repositories\Slider\SliderRepository;
 use App\Repositories\Sector\ISectorRepository;
 use App\Repositories\School\ISchoolRepository;
 use App\Repositories\Major\IMajorRepository;
 use App\Repositories\SchoolType\ISchoolTypeRepository;
+use App\Repositories\Page\IPageRepository;
 use App\Repositories\Repositories;
 use Exception;
 use Illuminate\Cache\Repository;
+
 class ApiController extends Controller
 {
     /**
@@ -25,15 +28,28 @@ class ApiController extends Controller
     private $schoolRepo;
     private $majorRepo;
     private $typeRepo;
+    private $pageRepo;
+    private $commentRepo;
     private $Repo;
 
-    public function __construct(ISchoolRepository $schoolRepo, ISectorRepository $sectorRepo, SliderRepository $sliderRepo, Repositories $repo, IMajorRepository $majorRepo, ISchoolTypeRepository $typeRepo)
+    public function __construct(
+        ISchoolRepository $schoolRepo,
+        ISectorRepository $sectorRepo,
+        SliderRepository $sliderRepo,
+        Repositories $repo,
+        IMajorRepository $majorRepo,
+        IPageRepository $pageRepo,
+        ICommentRepository $commentRepo,
+        ISchoolTypeRepository $typeRepo
+    )
     {
         $this->sliderRepo = $sliderRepo;
         $this->sectorRepo = $sectorRepo;
         $this->schoolRepo = $schoolRepo;
         $this->majorRepo = $majorRepo;
         $this->typeRepo = $typeRepo;
+        $this->pageRepo = $pageRepo;
+        $this->commentRepo = $commentRepo;
 
         $this->Repo = $repo;
     }
@@ -72,7 +88,7 @@ class ApiController extends Controller
         }
     }
 
-    public function getSchoolFilter($id = 0)
+    public function getAllSchool($id = 0)
     {
         $sectors = $this->sectorRepo->getAllSector();
         $majors = $this->majorRepo->getAllMajor();
@@ -86,9 +102,75 @@ class ApiController extends Controller
                 "majors" => $majors,
                 "areas" => $areas,
                 "school_types" => $types,
-                "schools"=>$schools
+                "schools" => $schools
             ],
             200
         );
+    }
+
+    public function getSchool($school_code){
+        $school = $this->schoolRepo->getSchool($school_code);
+        $majors = $this->majorRepo->getMajorInArray(json_decode($school->school_majors));
+        $school->school_majors = $majors;
+        if($school != null){
+            return response()->json([
+                "code" => 200,
+                "school" => $school
+            ],200);
+        }else{
+            return response()->json([
+                "code" => 404,
+                "message" => "Trường này không tồn tại!"
+            ],404);
+        }
+
+    }
+
+    public function getSector($sector_id)
+    {
+        $sector = $this->sectorRepo->getSector($sector_id);
+        if($sector != null) {
+            $schools = $this->schoolRepo->getSchoolBySectorId($sector_id);
+            $sector->schools = $schools;
+            return response()->json([
+                "code" => 200,
+                "sector" => $sector
+            ], 200);
+        }else{
+            return response()->json([
+                "code" => 404,
+                "message" => "Nhóm ngành không tồn tại!"
+            ],404);
+        }
+    }
+
+    public function getPage($slug)
+    {
+        $page = $this->pageRepo->getPage($slug);
+        if($page){
+            return response()->json(
+                [
+                    "status" => 200,
+                    "page" => $page,
+                ],
+                200
+            );
+        }else{
+            return response()->json(
+                [
+                    "status" => 404,
+                    "message" => "Trang không tồn tại",
+                ],
+                404
+            );
+        }
+    }
+
+    public function getAllComment($code)
+    {
+        return response()->json([
+            "code" => 200,
+            "comments" => $this->commentRepo->getCommentsBySchoolCode($code)
+        ]);
     }
 }

@@ -13,6 +13,7 @@ interface IMajorRepository{
     public function count();
     public function total();
 
-    //Api 
+    //Api
     public function getAllMajor();
+    public function getMajorInArray($arr);
 }

@@ -15,7 +15,7 @@ class SectorRepository extends Repositories implements ISectorRepository
         $this->Sector = $Sector;
     }
 
-    public function getSector($request, $status)
+    public function getSectors($request, $status)
     {
         $Sectors = $this->getModelWithStatus($status, $this->Sector);
         $search = '';
@@ -140,7 +140,6 @@ class SectorRepository extends Repositories implements ISectorRepository
     {
         try {
             $sector = $this->Sector->withTrashed()->find($id);
-            dd($sector);
             if ($sector != null) {
                 $sector->forceDelete();
                 return redirect()->back()->with('success', "Xóa nhóm ngành thành công!");
@@ -175,5 +174,9 @@ class SectorRepository extends Repositories implements ISectorRepository
             Cache::put('sectors', $sectors, 86400);
         }
         return $sectors;
+    }
+
+    public function getSector($sector_id){
+        return $this->Sector->select('id', 'name', 'image', 'description')->find($sector_id);
     }
 }

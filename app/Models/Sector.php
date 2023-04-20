@@ -10,4 +10,5 @@ class Sector extends Model
 {
     use HasFactory, SoftDeletes;
     protected $guarded = [];
+
 }

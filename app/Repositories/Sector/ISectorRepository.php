@@ -2,7 +2,7 @@
 namespace App\Repositories\Sector;
 
 interface ISectorRepository{
-    public function getSector($request, $status);
+    public function getSectors($request, $status);
     public function storeSector($request);
     public function editSector($request);
     public function updateSector($request);
@@ -13,4 +13,5 @@ interface ISectorRepository{
     public function total();
     //Api
     public function getAllSector();
+    public function getSector($sector_id);
 }

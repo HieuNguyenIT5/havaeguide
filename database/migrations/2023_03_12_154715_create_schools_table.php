@@ -24,6 +24,7 @@ return new class extends Migration
             $table->text('majors')->nullable();
             $table->text('school_description')->nullable(); // Mô tả về trường, có thể rỗng
             $table->text('school_image')->nullable(); // Đường dẫn đến hình ảnh của trường, có thể rỗng
+            $table->text('school_logo')->nullable(); // Đường dẫn đến hình ảnh của trường, có thể rỗng
             $table->unsignedInteger('type_id'); // Khóa ngoại của bảng "school_types"
             $table->unsignedInteger('area_id'); // Khóa ngoại của bảng "areas"
             $table->timestamps(); // Thêm cột "created_at" và "updated_at" để lưu thời gian tạo và cập nhật bản ghi

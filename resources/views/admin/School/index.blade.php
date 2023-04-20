@@ -75,11 +75,11 @@
                             <input type="checkbox" name="list_check[]" value="{{$school->id}}">
                         </td>
                         <td style="width:5%; overflow:hidden;"><a href="#">{{$school->school_code}}</a></td>
-                        <td ><img style="width:80px; height:80px" src="{{asset('images/'.$school->school_image)}}" alt=""></td>
-                        <td style="width:30%; overflow:hidden;"><a href="#">{{$school->school_name}}</a></td>
+                        <td ><img style="width:80px; height:80px" src="{{asset('images/'.($school->school_logo ?? "image_blank.jpg"))}}" alt=""></td>
+                        <td style="width:35%; overflow:hidden;"><a href="#">{{$school->school_name}}</a></td>
                         <td style="width:30%; overflow:hidden;">{{$school->school_address}}</td>
                         <td style="width:20%;">{{$school->school_phone}}</td>
-                        <td>
+                        <td style="width:10%;">
                             @if($school->deleted_at == null)
                             <a href="{{route('admin.school.edit', $school->id)}}" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>
 
@@ -102,7 +102,7 @@
             <div>
                 {{$schools->links()}}
             </div>
-            
+
     </div>
 </div>
 @endsection

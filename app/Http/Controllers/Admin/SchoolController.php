@@ -25,7 +25,7 @@ class SchoolController extends Controller
 
     public function Index(Request $request, $status = '')
     {
-        return $this->schoolRepo->getSchool($request, $status);
+        return $this->schoolRepo->getSchools($request, $status);
     }
 
     public function Create()

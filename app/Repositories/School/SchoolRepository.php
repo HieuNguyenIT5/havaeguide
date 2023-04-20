@@ -27,7 +27,7 @@ class SchoolRepository extends Repositories implements ISchoolRepository
     {
         return $this->school->find($id);
     }
-    public function getSchool($request, $status)
+    public function getSchools($request, $status)
     {
         $schools = $this->getModelWithStatus($status, $this->school);
         if ($request->keyword) {
@@ -78,19 +78,15 @@ class SchoolRepository extends Repositories implements ISchoolRepository
             ]
         );
         // dd($request->all());
-        
+
         try {
             $school = $request->except(['_token', 'major', 'sector', 'search_major', 'type']);
             $type = json_encode($request->type);
             $school_major = json_encode($request->major);
             $school['types'] = $type;
             $school['school_majors'] = $school_major;
-            if ($request->hasFile('school_image')) {
-                $image = $request->file('school_image');
-                $fileName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images'), $fileName);
-                $school['school_image'] = $fileName;
-            }
+            $school['school_image'] = $this->saveImage($request, 'school_image');
+            $school['school_logo'] = $this->saveImage($request, 'school_logo');
             $this->school->create($school);
             return redirect("admin/school")->with("success", "Thêm trường học thành công!");
         } catch (Exception $ex) {
@@ -167,14 +163,10 @@ class SchoolRepository extends Repositories implements ISchoolRepository
             $school_major = json_encode($request->major);
             $school['types'] = $type;
             $school['school_majors'] = $school_major;
-            if ($request->hasFile('school_image')) {
-                $image = $request->file('school_image');
-                $fileName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images'), $fileName);
-                $school['school_image'] = $fileName;
-            }
-            $this->school->find($id)->update($school);
-
+            $school_old = $this->school->find($id);
+            $school['school_image'] = $this->saveImage($request, 'school_image', $school_old->school_image);
+            $school['school_logo'] = $this->saveImage($request, 'school_logo', $school_old->school_logo);
+            $school_old->update($school);
             return redirect()->back()->with("success", "Cập nhật thông tin trường học thành công!");
         } catch (Exception $ex) {
             return redirect()->back()->with("danger", "Cập nhật thông tin trường học thất bại! " . $ex->getMessage());
@@ -190,7 +182,7 @@ class SchoolRepository extends Repositories implements ISchoolRepository
                 return redirect()->back()->with('success', "Ẩn trường thành công!");
             }
             return redirect()->back()->with('danger', "Không có trường nào như thế!");
-        } catch (Exception) {
+        } catch (Exception $ex) {
             return redirect()->back()->with('success', "Ẩn trường thất bại!");
         }
     }
@@ -204,7 +196,7 @@ class SchoolRepository extends Repositories implements ISchoolRepository
                 return redirect()->back()->with('success', "Hiển thị trường thành công!");
             }
             return redirect()->back()->with('danger', "Không có trường nào như thế!");
-        } catch (Exception) {
+        } catch (Exception $ex) {
             return redirect()->back()->with('success', "Hiển thị trường thất bại!");
         }
     }
@@ -218,7 +210,7 @@ class SchoolRepository extends Repositories implements ISchoolRepository
                 return redirect()->back()->with('success', "Xóa trường thành công!");
             }
             return redirect()->back()->with('danger', "Không có trường nào như thế!");
-        } catch (Exception) {
+        } catch (Exception $ex) {
             return redirect()->back()->with('success', "Xóa trường thất bại!");
         }
     }
@@ -241,7 +233,7 @@ class SchoolRepository extends Repositories implements ISchoolRepository
     {
         try {
             $schools = $this->school
-                ->select('school_code', 'school_name', 'school_address', 'school_image', 'school_description')
+                ->select('school_code', 'school_name', 'school_address', 'school_logo', 'school_description')
                 ->limit(12)
                 ->get();
             return $schools;
@@ -258,6 +250,17 @@ class SchoolRepository extends Repositories implements ISchoolRepository
             $schools = School::get();
             Cache::put('schools',$schools, 86400 /* ~ 1 ngày */);
         }
+        return $schools;
+    }
+    public function  getSchool($school_code){
+        $school = $this->school->where("school_code", $school_code)->first();
+        return $school;
+    }
+
+    public function getSchoolBySectorId($sector_id){
+        $schools = School::whereHas('majors', function ($query) use ($sector_id) {
+            $query->where('sector_id', $sector_id);
+        })->get();
         return $schools;
     }
 }
