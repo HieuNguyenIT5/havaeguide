@@ -18,19 +18,10 @@
             Sửa nội dung trang
         </div>
         <div class="card-body">
-            <form action="{{route('admin.page.update',$page->id)}}" method="POST" enctype="multipart/form-data">
-                @csrf
                 <div class="form-group">
                     <label for="slug">Đường dẫn tĩnh</label>
-                    <input class="form-control" value="{{$page->slug}}" type="text" name="slug" id="slug" disabled>
+                    <input class="form-control" value="{{$question->title}}" type="text" name="slug" id="slug" disabled>
                     @error('slug')
-                    <small class="text-danger">{{$message}}</small>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <label for="name">Tên trang</label>
-                    <input class="form-control" value="{{$page->name}}" type="text" name="name" id="name" disabled>
-                    @error('name')
                     <small class="text-danger">{{$message}}</small>
                     @enderror
                 </div>
@@ -38,11 +29,17 @@
                 <div class="form-group">
                     <label for="content">Nội dung trang</label>
                     <textarea name="content" class="form-control" id="content" cols="30" rows="5" >
-                        {{$page->content}}
+                        {{$question->content}}
                     </textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Cập nhật</button>
-            </form>
+                <form method="post" action="{{route('admin.question.changeStatus',$question->id)}}" >
+                    @csrf
+                    <select name="status" class="mb-2">
+                        <option value="0" {{$question->status ? "" : "selected"}}>Hủy phê duyệt</option>
+                        <option value="1" {{$question->status ? "selected" : ""}}>Phê duyệt</option>
+                    </select><br/>
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                </form>
         </div>
     </div>
 </div>
@@ -52,10 +49,10 @@
     tinymce.init(
         {
             selector: 'textarea#content',
-            themes: 'silver',
-            plugins: "link image code table advtable lists checklist preview fullpage powerpaste fullscreen searchreplace autolink directionality advcode visualblocks visualchars media table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist textcolor wordcount tinymcespellchecker a11ychecker imagetools mediaembed",
-            toolbar: 'undo redo | styleselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify | outdent indent |formatselect | numlist bullist outdent indent  | removeformat | fullscreen',
-            height: 1000,
+            readonly: true,
+            menubar: false,
+            toolbar: false,
+            height: 380,
         }
     );
 </script>

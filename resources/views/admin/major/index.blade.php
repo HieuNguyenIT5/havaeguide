@@ -80,12 +80,12 @@
                     @if($majors->total() > 0)
                     @foreach($majors as $major)
                     <tr class="">
-                        <td>
+                        <td style="width:3%; overflow:hidden;">
                             <input type="checkbox" name="list_check[]" value="{{$major->id}}">
                         </td>
                         <td style="width:30%; overflow:hidden;"><a href="#">{{$major->major_name}}</a></td>
-                        <td style="width:50%; overflow:hidden;"><a href="#">{{$major->major_description}}</a></td>
-                        <td style="width:30%; overflow:hidden;">{{$major->created_at}}</td>
+                        <td class="major_description" style="width:50%; overflow:hidden;"></td>
+                        <td style="width:10%; overflow:hidden;">{{$major->created_at}}</td>
                         <td style="width:10%; overflow:hidden;">
                             @if($major->deleted_at == null)
                             <a href="{{route('admin.major.edit', $major->id)}}" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>
@@ -119,6 +119,14 @@
     }
     td a{
         display: inline;
+    }
+    .major_description{
+        display:-webkit-box;
+        -webkit-line-clamp:3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: break-word;
     }
 </style>
 @endsection

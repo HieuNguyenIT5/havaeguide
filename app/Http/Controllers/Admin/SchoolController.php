@@ -73,4 +73,9 @@ class SchoolController extends Controller
     {
         return $this->schoolRepo->deleteSchool($id);
     }
+
+    //Hành động áp dụng hàng loạt
+    function action(Request $req){
+        return $this->schoolRepo->actionSchool($req);
+    }
 }

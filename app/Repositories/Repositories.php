@@ -17,7 +17,7 @@ class Repositories{
         }
         return $model;
     }
-    public function saveImage($request, $column, $imageOld = null){
+    public function saveImage($request, $column, $imageOld = 'image_blank.jpg'){
         if ($request->hasFile($column)) {
             $image = $request->file($column);
             $fileName = $column.time() . '.' . $image->getClientOriginalExtension();

@@ -64,69 +64,18 @@ class MajorRepository extends Repositories implements IMajorRepository
     }
 
     public function editMajor($id){
-        $Sectors = $this->sector->select("id", "Sector_name")->get();
+        $Sectors = $this->sector->select("id", "name")->get();
         $major = $this->find($id);
         return compact("Sectors", "major");
     }
     public function updateMajor($request, $id){
-        $rules = [
-            'major_code' => [
-                'required',
-                'string',
-                'max:10',
-                Rule::unique('majors')->ignore($id),
-            ],
-            'major_name' => 'required|string|max:200',
-            'major_address' => 'string|max:500',
-            'major_phone' => [
-                'required',
-                'string',
-                'regex:/^0[0-9]{9,10}$/',
-                'max:11',
-            ],
-            'major_image' => 'mimes:jpg,png,gif,webp|max:20000',
-        ];
-
-        $messages = [
-            'required' => ':attribute không được bỏ trống!',
-            'max' => ':attribute có độ dài lớn nhất :max ký tự!',
-            'email' => 'không đúng định dạng!',
-            'unique' => ':attribute đã được sử dụng',
-            'mimes' => ':attribute phải có định dạng :mimes!',
-        ];
-
-        $attributes = [
-            'major_code' => 'Mã trường',
-            'major_email' => 'Email',
-            'major_name' => 'Tên trường',
-            'major_address' => 'Địa chỉ',
-            'major_phone' => 'Số điện thoại',
-            'major_image' => 'Logo',
-        ];
-
-        if ($request->major_email != null) {
-            $rules['major_email'] = [
-                'max:255',
-                Rule::unique('majors')->ignore($id),
-            ];
-        }
-
-        $request->validate($rules, $messages, $attributes);
-
         try {
-            $major = $request->except('_token');
-            if ($request->hasFile('major_image')) {
-                $image = $request->file('major_image');
-                $fileName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images'), $fileName);
-                $major['major_image'] = $fileName;
-            }
-
+            $major = $request->except('_token'); 
             $this->major->find($id)->update($major);
 
-            return redirect("admin/major")->with("success", "Cập nhật thông tin trường học thành công!");
+            return redirect()->back()->with("success", "Cập nhật thông tin ngành học thành công!");
         } catch(Exception $ex) {
-            return redirect("admin/major")->with("danger", "Cập nhật thông tin trường học thất bại! " . $ex->getMessage());
+            return redirect()->back()->with("danger", "Cập nhật thông tin ngành học thất bại! " . $ex->getMessage());
         }
     }
 

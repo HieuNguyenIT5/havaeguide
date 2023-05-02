@@ -30,6 +30,11 @@ Route::get('sector/{sector_id}', [ApiController::class, 'getSector'])->name('api
 Route::get('page/{slug}', [ApiController::class, 'getPage'])->name('api.page.getPage');
 Route::get('comment/{code}', [ApiController::class, 'getAllComment'])->name('api.comment.getAllComment');
 Route::get('areas', [ApiController::class, 'getAllArea'])->name('api.area.getAllArea');
+Route::get('area/{codename}', [ApiController::class, 'getArea'])->name('api.area.getArea');
+Route::get('questions', [ApiController::class, 'getAllQuestion'])->name('api.questions');
+Route::get('question/{id}', [ApiController::class, 'getQuestion'])->name('api.question.getQuestion');
+Route::get('posts', [ApiController::class, 'getAllPost'])->name('api.post.getAllPost');
+Route::get('post/{slug}', [ApiController::class, 'getPost'])->name('api.post.getPost');
 
 
 Route::post('register', [ApiAuthController::class, 'register'])->name('api.register');
@@ -39,6 +44,7 @@ Route::middleware('token.verify')->group(function () {
     Route::get('logout', [ApiAuthController::class, 'logout'])->name('api.logout');
     Route::get('user_info', [ApiAuthController::class, 'getUserInfo'])->name('api.getUserInfo');
     Route::post('comment/add', [ApiController::class, 'addComment'])->name('api.addComment');
+    Route::post('question/ask', [ApiController::class, 'ask'])->name('api.question.ask');
+    Route::post('question/{user_id}', [ApiController::class, 'getAllQuestionByUserId'])->name('api.question.AllQuestionByUserId');
 });
 Route::get('listRoute', [RoleController::class, 'listRoute'])->name('.listRoute');
-

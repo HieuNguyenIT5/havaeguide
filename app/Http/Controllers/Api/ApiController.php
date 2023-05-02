@@ -12,6 +12,8 @@ use App\Repositories\School\ISchoolRepository;
 use App\Repositories\Major\IMajorRepository;
 use App\Repositories\SchoolType\ISchoolTypeRepository;
 use App\Repositories\Page\IPageRepository;
+use App\Repositories\Post\IPostRepository;
+use App\Repositories\Question\IQuestionRepository;
 use App\Repositories\Repositories;
 use Exception;
 use Illuminate\Cache\Repository;
@@ -30,6 +32,8 @@ class ApiController extends Controller
     private $typeRepo;
     private $pageRepo;
     private $commentRepo;
+    private $questionRepo;
+    private $postRepo;
     private $Repo;
 
     public function __construct(
@@ -40,7 +44,9 @@ class ApiController extends Controller
         IMajorRepository $majorRepo,
         IPageRepository $pageRepo,
         ICommentRepository $commentRepo,
-        ISchoolTypeRepository $typeRepo
+        IQuestionRepository $questionRepo,
+        ISchoolTypeRepository $typeRepo,
+        IPostRepository $postRepo,
     )
     {
         $this->sliderRepo = $sliderRepo;
@@ -50,6 +56,8 @@ class ApiController extends Controller
         $this->typeRepo = $typeRepo;
         $this->pageRepo = $pageRepo;
         $this->commentRepo = $commentRepo;
+        $this->questionRepo = $questionRepo;
+        $this->postRepo = $postRepo;
 
         $this->Repo = $repo;
     }
@@ -152,6 +160,33 @@ class ApiController extends Controller
             "areas" => $areas
         ],200);
     }
+    public function getArea($codename){
+
+        $areas = $this->Repo->getArea();
+        $areas = array_filter($areas, function($area) use ($codename) {
+            return $area->codename === $codename;
+        });
+        $area = reset($areas);
+        $schools = $this->schoolRepo->getSchoolByAreaCodename($area->code);
+        $area->schools = $schools;
+        if($area){
+            return response()->json(
+                [
+                    "code" => 200,
+                    "area" => $area,
+                ],
+                200
+            );
+        }else{
+            return response()->json(
+                [
+                    "code" => 404,
+                    "message" => "Khồng có tỉnh thành nào như thế!",
+                ],
+                404
+            );
+        }
+    }
     public function getPage($slug)
     {
         $page = $this->pageRepo->getPage($slug);
@@ -193,6 +228,100 @@ class ApiController extends Controller
                 "code" => 400,
                 "message" => "Thêm comment thất bại!"
             ],400);
+        }
+    }
+
+    //người dùng đặt câu hỏi
+    public function ask(Request $request){
+        try{
+            $question = $this->questionRepo->ask($request);
+                return response()->json([
+                    "code" => 200,
+                    "question" => $question,
+                ],200);
+        }catch (Exception $e){
+            return response()->json([
+                "code" => 500,
+                "message" => "Lỗi trong quá trình đặt câu hỏi",
+            ],500);
+        }
+    }
+
+    //Lấy tất cả các câu hỏi
+    public function getAllQuestion(){
+        try{
+            $questions = $this->questionRepo->getAllQuestion();
+            return response()->json([
+                "code" => 200,
+                "questions" => $questions,
+            ],200);
+        }catch (Exception $e){
+            return response()->json([
+                "code" => 500,
+                "message" => "Lỗi trong quá trình lấy câu hỏi!",
+            ],500);
+        }
+    }
+
+    //Lấy tất cả các câu hỏi của một người dùng
+    public function getAllQuestionByUserId($user_id){
+        try{
+            $questions = $this->questionRepo->getQuestionByUserId($user_id);
+            return response()->json([
+                "code" => 200,
+                "questions" => $questions,
+            ],200);
+        }catch (Exception $e){
+            return response()->json([
+                "code" => 500,
+                "message" => "Lỗi trong quá trình lấy câu hỏi!",
+            ],500);
+        }
+    }
+    //Lấy tất cả các câu hỏi
+    public function getQuestion($id){
+        try{
+            $question = $this->questionRepo->getQuestion($id);
+            return response()->json([
+                "code" => 200,
+                "questions" => $question,
+            ],200);
+        }catch (Exception $e){
+            return response()->json([
+                "code" => 500,
+                "message" => "Lỗi trong quá trình đặt câu hỏi",
+            ],500);
+        }
+    }
+
+    //Lấy tất cả các bài viết
+    public function getAllPost(){
+        try{
+            $posts = $this->postRepo->getAllPost();
+            return response()->json([
+                "code" => 200,
+                "posts" => $posts,
+            ],200);
+        }catch (Exception $e){
+            return response()->json([
+                "code" => 500,
+                "message" => "Lỗi trong quá trình đặt câu hỏi",
+            ],500);
+        }
+    }
+    //Lấy một bài viết theo slug
+    public function getPost($slug){
+        try{
+            $post = $this->postRepo->getPost($slug);
+            return response()->json([
+                "code" => 200,
+                "post" => $post,
+            ],200);
+        }catch (Exception $e){
+            return response()->json([
+                "code" => 500,
+                "message" => "Lỗi trong quá trình đặt câu hỏi",
+            ],500);
         }
     }
 }

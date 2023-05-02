@@ -2,10 +2,13 @@
 namespace App\Repositories\Question;
 
 use App\Models\Question;
+use App\Models\SessionUser;
 use App\Repositories\Repositories;
+use http\Env\Request;
 use Illuminate\Validation\Rule;
 use Exception;
 use Cache;
+use function Ramsey\Uuid\Generator\timestamp;
 
 class QuestionRepository extends Repositories implements IQuestionRepository
 {
@@ -19,154 +22,46 @@ class QuestionRepository extends Repositories implements IQuestionRepository
     }
     public function getListQuesttion($request, $status)
     {
-        $questions = $this->getModelWithStatus($status, $this->question);
+        if($status == 'hide'){
+            $questions = $this->question->where('status', 0);
+        }elseif($status=='active'){
+            $questions = $this->question->where('status', 1);
+        }else{
+            $questions = $this->question;
+        }
         $search = '';
         if($request->keyword){
             $search = $request->keyword;
             $questions = $questions->where('title', 'like', "%{$search}%");
         }
-        $questions = $questions->paginate(10);
+        $questions = $questions
+            ->join('users', 'questions.user_id', 'users.id')
+            ->select('questions.id', 'questions.title','users.name as user_name', 'questions.created_at', 'questions.status')
+            ->paginate(10);
         $count = $this->count();
         $list_act = $this->getListStatus($status);
 
         return view('admin.question.index', compact("questions", "count", "list_act"));
     }
 
-    public function createQuestion(){
-        return view("admin.question.create", compact("sectors"));
+    public function viewQuestion($id){
+            $question = $this->question->find($id);
+            return $question;
     }
-
-    public function storeQuestion($request){
-        $request->validate(
-            [
-                'question_name'=> 'required|string|max:200',
-            ],
-            [
-                'required'=> ':attribute không được bỏ trống!',
-                'max'=> ':attribute có độ dài lớn nhất :max ký tự!',
-            ],
-            [
-                'question_name'=> "Tên ngành",
-            ]
-        );
-        // dd($request->all());
-        try{
-            $question = $request->except('_token');
-            $this->question->create($question);
-                return redirect()->back()->with("success", "Thêm ngành đào tạo thành công!");
-        }catch(Exception $ex){
-            return redirect()->back()->with("danger", "Thêm ngành đào tạo thất bại!".$ex->getMessage());
-        }
-    }
-
-    public function editQuestion($id){
-        $question = $this->find($id);
-        return compact("Sectors", "question");
-    }
-    public function updateQuestion($request, $id){
-        $rules = [
-            'question_code' => [
-                'required',
-                'string',
-                'max:10',
-                Rule::unique('questions')->ignore($id),
-            ],
-            'question_name' => 'required|string|max:200',
-            'question_address' => 'string|max:500',
-            'question_phone' => [
-                'required',
-                'string',
-                'regex:/^0[0-9]{9,10}$/',
-                'max:11',
-            ],
-            'question_image' => 'mimes:jpg,png,gif,webp|max:20000',
+    public function changeStatus($id, $request){
+        $question = [
+          'status'=> $request->status
         ];
-
-        $messages = [
-            'required' => ':attribute không được bỏ trống!',
-            'max' => ':attribute có độ dài lớn nhất :max ký tự!',
-            'email' => 'không đúng định dạng!',
-            'unique' => ':attribute đã được sử dụng',
-            'mimes' => ':attribute phải có định dạng :mimes!',
-        ];
-
-        $attributes = [
-            'question_code' => 'Mã trường',
-            'question_email' => 'Email',
-            'question_name' => 'Tên trường',
-            'question_address' => 'Địa chỉ',
-            'question_phone' => 'Số điện thoại',
-            'question_image' => 'Logo',
-        ];
-
-        if ($request->question_email != null) {
-            $rules['question_email'] = [
-                'max:255',
-                Rule::unique('questions')->ignore($id),
-            ];
-        }
-
-        $request->validate($rules, $messages, $attributes);
-
-        try {
-            $question = $request->except('_token');
-            if ($request->hasFile('question_image')) {
-                $image = $request->file('question_image');
-                $fileName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images'), $fileName);
-                $question['question_image'] = $fileName;
-            }
-
-            $this->question->find($id)->update($question);
-
-            return redirect("admin/question")->with("success", "Cập nhật thông tin trường học thành công!");
-        } catch(Exception $ex) {
-            return redirect("admin/question")->with("danger", "Cập nhật thông tin trường học thất bại! " . $ex->getMessage());
-        }
+        $old = $this->question->find($id);
+        return $old->update($question);
     }
 
-    public function removeQuestion($id){
-        try{
-            $question = $this->question->withTrashed()->find($id);
-            if($question != null){
-                $question->delete();
-                return redirect()->back()->with('success', "Ẩn ngành đào tạo thành công!");
-            }
-            return redirect()->back()->with('danger', "Không có ngành đào tạo nào như thế!");
-        }catch(Exception $e){
-            return redirect()->back()->with('success', "Ẩn ngành đào tạo thất bại!");
-        }
-    }
-    public function restoreQuestion($id){
-        try{
-            $question = $this->question->withTrashed()->find($id);
-            if($question != null){
-                $question->restore();
-                return redirect()->back()->with('success', "Hiển thị ngành đào tạo thành công!");
-            }
-            return redirect()->back()->with('danger', "Không có ngành đào tạo nào như thế!");
-        }catch(Exception $e){
-            return redirect()->back()->with('success', "Hiển thị ngành đào tạo thất bại!");
-        }
-    }
-    public function deleteQuestion($id){
-        try{
-            $question = $this->question->withTrashed()->find($id);
-            if($question != null){
-                $question->forceDelete();
-                return redirect()->back()->with('success', "Xóa ngành đào tạo thành công!");
-            }
-            return redirect()->back()->with('danger', "Không có ngành đào tạo nào như thế!");
-        }catch(Exception $e){
-            return redirect()->back()->with('success', "Xóa ngành đào tạo thất bại!");
-        }
-    }
     public function count()
     {
         $count = [];
-        $count['all_question'] = $this->question->withTrashed()->count();
-        $count['question_active'] = $this->question->all()->count();
-        $count['question_hide'] = $this->question->onlyTrashed()->count();
+        $count['all_question'] = $this->question->count();
+        $count['question_active'] = $this->question->where('status', 1)->count();
+        $count['question_hide'] = $this->question->where('status', 0)->count();
         return $count;
     }
 
@@ -178,11 +73,37 @@ class QuestionRepository extends Repositories implements IQuestionRepository
     //API
 
     public function getAllQuestion(){
-        $questions = Cache::get('questions');
-        if($questions == null){
-            $questions = question::select('id', 'question_name', 'sector_id')->get();
-            Cache::put('questions',$questions, 86400);
-        }
+        $questions = question::
+            join("users", "users.id", "questions.user_id")
+            ->select('questions.id','questions.title', 'questions.content', 'questions.number_of_views', 'questions.number_of_replies','users.avatar', 'users.name as user_name', 'questions.created_at')
+            ->orderBy('questions.id')
+            ->get();
         return $questions;
+    }
+    public function ask($request)
+    {
+        $user = SessionUser::where('token', $request->header('token'))
+            ->select('user_id')
+            ->first();
+        $question = [
+            "title"=> $request->title,
+            "content" => $request->content,
+            "user_id" => $user->user_id,
+            "status" => 1,
+        ];
+        $question = $this->question->create($question);
+        return $question;
+    }
+    public function getQuestionByUserId($user_id){
+        $questions = question::
+        select('id', 'title', 'content', 'number_of_views', 'number_of_replies')
+            ->where('user_id', $user_id)
+            ->orderBy('number_of_views')
+            ->get();
+        return $questions;
+    }
+    public function getQuestion($id){
+        $question = $this->question->find($id);
+        return $question;
     }
 }

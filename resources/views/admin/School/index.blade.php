@@ -24,12 +24,26 @@
             </div>
         </div>
         <div class="card-body">
-            <div class="analytic">
-                <a href="{{route('admin.school.index')}}" class="text-primary">Tất cả<span class="text-muted">({{$count['all_school']}})</span></a>
-                <a href="{{route('admin.school.status', 'active')}}" class="text-primary">Hoạt động<span class="text-muted">({{$count['school_active']}})</span></a>
-                <a href="{{route('admin.school.status', 'hide')}}" class="text-primary">Ẩn<span class="text-muted">({{$count['school_hide']}})</span></a>
+            <div class="analytic d-flex">
+                <div class="col-6">
+                    <a href="{{route('admin.school.index')}}" class="text-primary">Tất cả<span class="text-muted">({{$count['all_school']}})</span></a>
+                    <a href="{{route('admin.school.status', 'active')}}" class="text-primary">Hoạt động<span class="text-muted">({{$count['school_active']}})</span></a>
+                    <a href="{{route('admin.school.status', 'hide')}}" class="text-primary">Ẩn<span class="text-muted">({{$count['school_hide']}})</span></a>
+                </div>
+                <div id="import_export_file" class="col-6 text-right">
+                    <form action="{{route('admin.school.import')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="file" name="file_import" id="file_import">
+                        <input type="submit" value="Thêm đồng loạt" class="mt-1 btn btn-success">
+                    </form>
+                    <form action="{{route('admin.school.export')}}" method="POST">
+                        @csrf
+                        <input type="submit" value="Xuất file" name="Excel_export" class="btn btn-success mt-1 mb-1">
+                    </form>
+                </div>
             </div>
-            <form action="{{route('admin.school.action')}}">
+
+            <form action="{{route('admin.school.action')}}" method="post">
                 @csrf
             <div class="form-action py-3 row">
                 <div class="col-6 text-left d-flex align-items-center">
@@ -40,17 +54,6 @@
                         @endforeach
                     </select>
                     <input type="submit" name="btn-search" value="Áp dụng" class="btn btn-primary">
-                </div>
-                <div id="import_export_file" class="col-6 text-right ">
-                    <form action="{{route('admin.school.import')}}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <input type="file" name="file_import" id="file_import">
-                        <input type="submit" value="Thêm đồng loạt" class="mt-1 btn btn-success">
-                    </form>
-                    <form action="{{route('admin.school.export')}}" method="POST">
-                        @csrf
-                        <input type="submit" value="Xuất file" name="Excel_export" class="btn btn-success mt-1 mb-1">
-                    </form>
                 </div>
             </div>
             <table class="table table-striped table-checkall">
@@ -102,7 +105,7 @@
             <div>
                 {{$schools->links()}}
             </div>
-
+        </div>
     </div>
 </div>
 @endsection

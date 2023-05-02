@@ -214,6 +214,33 @@ class SchoolRepository extends Repositories implements ISchoolRepository
             return redirect()->back()->with('success', "Xóa trường thất bại!");
         }
     }
+    public function actionSchool($req){
+        $listcheck = $req->input('list_check');
+        if($listcheck){
+            if(!empty($listcheck)){
+
+                $act = $req->input('act');
+                if($act == "remove"){
+                    School::destroy($listcheck);
+                    return redirect('admin/school')->with('success', "Bạn đã vô hiệu hóa thành công!",);
+                }
+                if($act == 'restore'){
+                    School::withTrashed()
+                        ->whereIn('id', $listcheck)
+                        ->restore();
+                    return redirect('admin/school')->with('success', "Bạn đã khôi phục thành công!");
+                }
+                if($act == 'delete'){
+                    School::withTrashed()
+                        ->whereIn('id', $listcheck)
+                        ->forceDelete();
+                    return redirect('admin/school')->with('success', "Bạn đã xóa vĩnh viễn thành viên!");
+                }
+            }
+        }
+    }
+
+
     public function count()
     {
         $count = [];
@@ -265,6 +292,11 @@ class SchoolRepository extends Repositories implements ISchoolRepository
         $schools = School::whereHas('majors', function ($query) use ($sector_id) {
             $query->where('sector_id', $sector_id);
         })->get();
+        return $schools;
+    }
+
+    public function getschoolByAreaCodename($code){
+        $schools = $this->school->where('area_id', $code)->get();
         return $schools;
     }
 }

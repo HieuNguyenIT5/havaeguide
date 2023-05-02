@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SectorController;
 use App\Http\Controllers\Admin\MajorController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\PostController;
 
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminBrandController;
@@ -65,7 +66,7 @@ Route::middleware('auth')->group(function () {
             Route::post('store', [SchoolController::class, 'store'])->name('.store');
             Route::post('import', [SchoolController::class, 'import'])->name('.import');
             Route::post('export', [SchoolController::class, 'excelExport'])->name('.export');
-            Route::get('action', [SchoolController::class, 'action'])->name('.action');
+            Route::post('action', [SchoolController::class, 'action'])->name('.action');
             Route::get('edit/{id}', [SchoolController::class, 'edit'])->name('.edit');
             Route::post('update/{id}', [SchoolController::class, 'update'])->name('.update');
             Route::get('remove/{id}', [SchoolController::class, 'remove'])->name('.remove');
@@ -100,26 +101,24 @@ Route::middleware('auth')->group(function () {
             Route::post('import', [MajorController::class, 'importExcel'])->name('.import');
             Route::post('export', [MajorController::class, 'excelExport'])->name('.export');
             Route::get('delete/{id}', [MajorController::class, 'delete'])->name('.delete');
-            Route::get('edit', [MajorController::class, 'edit'])->name('.edit');
+            Route::get('edit/{id}', [MajorController::class, 'edit'])->name('.edit');
             Route::get('remove/{id}', [MajorController::class, 'remove'])->name('.remove');
             Route::get('restore/{id}', [MajorController::class, 'restore'])->name('.restore');
-            Route::post('update', [MajorController::class, 'update'])->name('.update');
+            Route::post('update/{id}', [MajorController::class, 'update'])->name('.update');
             Route::get('action', [MajorController::class, 'action'])->name('.action');
         });
 
         Route::group(['prefix'=>'question', 'as'=> '.question'],function () {
             Route::get('/', [QuestionController::class, 'index'])->name('.index');
             Route::get('list/{status}', [QuestionController::class, 'index'])->name('.status');
-            Route::get('create', [QuestionController::class, 'create'])->name('.create');
+            Route::get('view/{id}', [QuestionController::class, 'view'])->name('.view');
+            Route::post('changeStatus/{id}', [QuestionController::class, 'changeStatus'])->name('.changeStatus');
             Route::post('store', [QuestionController::class, 'store'])->name('.store');
-            Route::post('import', [QuestionController::class, 'importExcel'])->name('.import');
-            Route::post('export', [QuestionController::class, 'excelExport'])->name('.export');
             Route::get('delete/{id}', [QuestionController::class, 'delete'])->name('.delete');
-            Route::get('edit', [QuestionController::class, 'edit'])->name('.edit');
+            Route::get('edit/{$id}', [QuestionController::class, 'edit'])->name('.edit');
             Route::get('remove/{id}', [QuestionController::class, 'remove'])->name('.remove');
             Route::get('restore/{id}', [QuestionController::class, 'restore'])->name('.restore');
             Route::post('update', [QuestionController::class, 'update'])->name('.update');
-            Route::get('action', [QuestionController::class, 'action'])->name('.action');
         });
 
         Route::group(['prefix'=>'page', 'as'=> '.page'],function () {
@@ -132,9 +131,18 @@ Route::middleware('auth')->group(function () {
             Route::post('update/{id}', [PageController::class, 'update'])->name('.update');
         });
 
-        Route::group(['prefix'=>'feedback', 'as'=> '.feedback'],function () {
-            Route::get('/', [AdminFeedbackController::class, 'index'])->name('.index');
-            Route::get('list', [AdminFeedbackController::class, 'index'])->name('.index');
+        Route::group(['prefix'=>'post', 'as'=> '.post'],function () {
+            Route::get('/', [PostController::class, 'index'])->name('.index');
+            Route::get('list', [PostController::class, 'index'])->name('.index');
+            Route::get('list/status', [PostController::class, 'index'])->name('.status');
+            Route::get('action', [PostController::class, 'action'])->name('.action');
+            Route::get('create', [PostController::class, 'create'])->name('.create');
+            Route::get('edit/{id}', [PostController::class, 'edit'])->name('.edit');
+            Route::post('update/{id}', [PostController::class, 'update'])->name('.update');
+            Route::post('store', [PostController::class, 'store'])->name('.store');
+            Route::get('remove/{id}', [PostController::class, 'remove'])->name('.remove');
+            Route::get('restore/{id}', [PostController::class, 'restore'])->name('.restore');
+            Route::get('delete/{id}', [PostController::class, 'delete'])->name('.delete');
         });
         Route::group(['prefix'=>'slider', 'as'=> '.slider'],function () {
             Route::get('', [SliderController::class, 'index'])->name('.index');

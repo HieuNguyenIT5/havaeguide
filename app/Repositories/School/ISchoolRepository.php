@@ -10,6 +10,7 @@ interface ISchoolRepository{
     public function updateSchool($request, $id);
     public function removeSchool($request);
     public function deleteSchool($request);
+    public function actionSchool($req);
     public function count();
     public function total();
 
@@ -18,4 +19,5 @@ interface ISchoolRepository{
     public function getAllSchool($s);
     public function getSchool($school_code);
     public function getSchoolBySectorId($sector_id);
+    public function getschoolByAreaCodename($codename);
 }

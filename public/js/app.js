@@ -22,8 +22,8 @@ var loadFileLogo = function (event) {
     var output = document.getElementById('school_logo');
     loadFile(output);
 };
-var loadFileImage = function (event) {
-    var output = document.getElementById('school_image');
+var loadFileImage = function (event, column) {
+    var output = document.getElementById(column);
     loadFile(output);
 };
 
@@ -40,8 +40,9 @@ tinymce.init(
 tinymce.init(
     {
         selector: 'textarea#school_detail',
-        plugins: "link image code table advtable lists checklist",
-        toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent',
+        themes: 'silver',
+        plugins: "link image code table advtable lists checklist preview fullpage powerpaste fullscreen searchreplace autolink directionality advcode visualblocks visualchars media table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist textcolor wordcount tinymcespellchecker a11ychecker imagetools mediaembed",
+        toolbar: 'undo redo | styleselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify | outdent indent |formatselect | numlist bullist outdent indent  | removeformat | fullscreen',
         height: 500,
     }
 );

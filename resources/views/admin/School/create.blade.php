@@ -83,7 +83,7 @@
                 <div class="form-group">
                     <label for="image">Logo trường</label>
                     <div>
-                        <input type="file" name="school_logo" id="school_logo_file" accept="image/gif, image/jpeg, image/png" onchange="loadFileLogo(event)">
+                        <input type="file" name="school_logo" id="school_logo_file" accept="image/gif, image/jpeg, image/png" onchange="loadFileImage(event, 'school_logo')">
                         <div class="image">
                             <img id="school_logo" class="image-show" src="{{asset('images/image_blank.jpg')}}" alt="Ảnh minh họa">
                         </div>
@@ -96,7 +96,7 @@
                 <div class="form-group">
                     <label for="image">Banner trường</label>
                     <div>
-                        <input type="file" name="school_image" id="school_image_file" accept="image/gif, image/jpeg, image/png" onchange="loadFileImage(event)">
+                        <input type="file" name="school_image" id="school_image_file" accept="image/gif, image/jpeg, image/png" onchange="loadFileImage(event, 'school_image')">
                         <div class="image">
                             <img id="school_image" class="image-show" src="{{asset('images/image_blank.jpg')}}" alt="Ảnh minh họa">
                         </div>
@@ -224,7 +224,7 @@
     }
     .dropdown-type{
         padding: 7px;
-        border: 1px solid #ccc;
+        border: 1px solid #cccccc;
         border-radius: 3px;
         cursor: pointer;
     }

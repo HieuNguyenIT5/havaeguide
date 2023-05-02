@@ -15,7 +15,7 @@
 <body>
     <div id="warpper" class="nav-fixed">
         <nav class="topnav shadow navbar-light bg-white d-flex">
-            <div class="navbar-brand"><a href="?">QuangVinhMart Admin</a></div>
+            <div class="navbar-brand"><a href="?">Hava E-guide Admin</a></div>
             <div class="nav-right ">
                 <div class="btn-group mr-auto">
                     <button type="button" class="btn dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -122,13 +122,20 @@
                             Hỏi đáp
                         </a>
                     </li>
-                    <li class="nav-link {{$module_active == 'feedback' ? 'active': ''}}">
-                        <a href="{{url('/admin/feedback/list')}}">
+                    <li class="nav-link {{$module_active == 'post' ? 'active': ''}}">
+                        <a href="{{url('/admin/post')}}">
                             <div class="nav-link-icon d-inline-flex">
                                 <i class="fa-solid fa-message"></i>
                             </div>
-                            Phản hồi
+                            Tin tức
                         </a>
+                        <i class="arrow fas fa-angle-right"></i>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="{{route('admin.post.create')}}">Thêm mới</a>
+                            </li>
+                            <li><a href="{{route('admin.post.index')}}">Danh sách</a></li>
+                        </ul>
                     </li>
                     <li class="nav-link {{$module_active == 'user' ? 'active': ''}}">
                         <a href="{{url('/admin/user/list')}}">

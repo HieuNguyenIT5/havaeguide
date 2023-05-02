@@ -26,8 +26,8 @@
         <div class="card-body">
             <div class="analytic">
                 <a href="{{route('admin.question.index')}}" class="text-primary">Tất cả<span class="text-muted">({{$count['all_question']}})</span></a>
-                <a href="{{route('admin.question.status', 'active')}}" class="text-primary">Hoạt động<span class="text-muted">({{$count['question_active']}})</span></a>
-                <a href="{{route('admin.question.status', 'hide')}}" class="text-primary">Ẩn<span class="text-muted">({{$count['question_hide']}})</span></a>
+                <a href="{{route('admin.question.status', 'active')}}" class="text-primary">Đã phê duyệt<span class="text-muted">({{$count['question_active']}})</span></a>
+                <a href="{{route('admin.question.status', 'hide')}}" class="text-primary">Chưa phê duyệt<span class="text-muted">({{$count['question_hide']}})</span></a>
             </div>
             <form action="{{route('admin.question.action')}}">
                 @csrf
@@ -48,11 +48,9 @@
                         <th scope="col">
                             <input name="checkall" type="checkbox">
                         </th>
-                        <th scope="col">Mã trường</th>
-                        <th scope="col">Ảnh</th>
-                        <th scope="col">Tên trường</th>
-                        <th scope="col">Địa chỉ</th>
-                        <th scope="col">Điện thoại</th>
+                        <th scope="col">Câu hỏi</th>
+                        <th scope="col">Người hỏi</th>
+                        <th scope="col">Ngày tạo</th>
                         <th scope="col">Tác vụ</th>
                     </tr>
                 </thead>
@@ -63,20 +61,12 @@
                         <td>
                             <input type="checkbox" name="list_check[]" value="{{$question->id}}">
                         </td>
-                        <td style="width:5%; overflow:hidden;"><a href="#">{{$question->question_code}}</a></td>
-                        <td ><img style="width:80px; height:80px" src="{{asset('images/'.$question->question_image)}}" alt=""></td>
-                        <td style="width:30%; overflow:hidden;"><a href="#">{{$question->question_name}}</a></td>
-                        <td style="width:30%; overflow:hidden;">{{$question->question_address}}</td>
-                        <td style="width:20%;">{{$question->question_phone}}</td>
+                        <td style="width:55%; overflow:hidden;"><a href="#">{{$question->title}}</a></td>
+                        <td >{{$question->user_name}}</td>
+                        <td style="width:15%; overflow:hidden;"><a href="#">{{$question->created_at}}</a></td>
                         <td>
-                            @if($question->deleted_at == null)
-                            <a href="{{route('admin.question.edit', $question->id)}}" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>
-
-                            <a href="{{ route('admin.question.remove', $question->id) }}" onclick="return confirm('Bạn có chắc chắn muốn ẩn trường này không?')" class="btn btn-success btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Vô hiệu hóa"><i class="fa-solid fa-eye"></i></a>
-                            @else
-                            <a href="{{ route('admin.question.restore', $question->id) }}" onclick="return confirm('Bạn có hiển thị lại trường này không?')" class="btn btn-warning btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Khôi phục"><i class="fa-solid fa-eye-slash"></i></a>
+                            <a href="{{route('admin.question.view', $question->id)}}" class="btn {{$question->status==1 ? "btn-success" : "btn-warning"}} btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>
                             <a href="{{ route('admin.question.delete', $question->id) }}" onclick="return confirm('Bạn có chắc chắn muốn xóa vĩnh viễn trường này không?')" class="btn btn-danger btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Xóa vĩnh viễn"><i class="fa-solid fa-trash"></i></a>
-                            @endif
                         </td>
                     </tr>
                     @endforeach
@@ -91,7 +81,7 @@
             <div>
                 {{$questions->links()}}
             </div>
-            
+
     </div>
 </div>
 @endsection

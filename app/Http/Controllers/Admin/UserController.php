@@ -24,7 +24,6 @@ class UserController extends Controller
     }
 
     function index(Request $request, $status=""){
-
         $count = $this->userRepository->count();
         if($status == "del"){
             $list_act = [

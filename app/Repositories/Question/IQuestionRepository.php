@@ -4,15 +4,13 @@ namespace App\Repositories\Question;
 
 interface IQuestionRepository{
     public function getListQuesttion($request, $status);
-    public function createQuestion();
-    public function storeQuestion($request);
-    public function editQuestion($id);
-    public function updateQuestion($request, $id);
-    public function removeQuestion($request);
-    public function deleteQuestion($request);
-    public function count();
-    public function total();
+    public function viewQuestion($id);
+    public function changeStatus($id, $request);
 
-    //Api 
+    //Api
     public function getAllQuestion();
+    public function ask($request);
+    public function getQuestionByUserId($user_id);
+    public function getQuestion($id);
+
 }

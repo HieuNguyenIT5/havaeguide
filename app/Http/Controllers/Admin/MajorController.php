@@ -24,7 +24,7 @@ class MajorController extends Controller
     public function index(Request $request, $status = ''){
         return $this->majorRepo->getMajor($request, $status);
     }
-    
+
     public function create()
     {
         return $this->majorRepo->createMajor();
@@ -56,13 +56,13 @@ class MajorController extends Controller
 
     public function edit($id)
     {
-        $compact = $this->majorRepo->editSchool($id);
+        $compact = $this->majorRepo->editMajor($id);
         return view("admin.major.edit", $compact);
     }
     public function update(Request $request, $id)
     {
-        return $this->majorRepo->updateSchool($request, $id);
-    }
+        return $this->majorRepo->updateMajor($request, $id);
+    }   
 
     public function remove($id){
         return $this->majorRepo->removeMajor($id);
