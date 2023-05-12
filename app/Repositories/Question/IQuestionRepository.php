@@ -4,8 +4,11 @@ namespace App\Repositories\Question;
 
 interface IQuestionRepository{
     public function getListQuesttion($request, $status);
+    public function getQuestionByStatus($status);
     public function viewQuestion($id);
     public function changeStatus($id, $request);
+    public function countQuestion();
+    public function countUnQuestion();
 
     //Api
     public function getAllQuestion();

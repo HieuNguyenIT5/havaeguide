@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
         Route::get('dashboard', [DashboardController::class,'show'])->name('.dashboard');
         Route::group(['prefix'=>'role', 'as'=> '.role'],function () {
             Route::get('/', [RoleController::class, 'index'])->name('.index');
+            Route::get('list', [RoleController::class, 'index'])->name('.index');
             Route::get('create', [RoleController::class, 'create'])->name('.create');
             Route::post('store', [RoleController::class, 'store'])->name('.store');
         });
@@ -111,6 +112,7 @@ Route::middleware('auth')->group(function () {
         Route::group(['prefix'=>'question', 'as'=> '.question'],function () {
             Route::get('/', [QuestionController::class, 'index'])->name('.index');
             Route::get('list/{status}', [QuestionController::class, 'index'])->name('.status');
+            Route::get('action', [QuestionController::class, 'action'])->name('.action');
             Route::get('view/{id}', [QuestionController::class, 'view'])->name('.view');
             Route::post('changeStatus/{id}', [QuestionController::class, 'changeStatus'])->name('.changeStatus');
             Route::post('store', [QuestionController::class, 'store'])->name('.store');

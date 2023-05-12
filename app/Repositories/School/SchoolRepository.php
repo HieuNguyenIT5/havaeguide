@@ -249,6 +249,9 @@ class SchoolRepository extends Repositories implements ISchoolRepository
         $count['school_hide'] = $this->school->onlyTrashed()->count();
         return $count;
     }
+    public function countSchool(){
+        return $this->school->count();
+    }
 
     public function total()
     {

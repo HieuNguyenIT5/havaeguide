@@ -37,7 +37,7 @@
                     <label for="avatar">Ảnh đại diện</label>
                     <div>
                         <input type="file" name="avatar" id="avatar" class="@error('file') is-invalid @enderror">
-                        <div class="avatar-img">
+                        <div class="image">
                             <img src="{{asset('images/'.$user->avatar)}}" alt="Ảnh đại diện">
                         </div>
                     </div>

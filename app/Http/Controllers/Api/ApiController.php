@@ -264,9 +264,9 @@ class ApiController extends Controller
     }
 
     //Lấy tất cả các câu hỏi của một người dùng
-    public function getAllQuestionByUserId($user_id){
+    public function getAllQuestionByUserId(){
         try{
-            $questions = $this->questionRepo->getQuestionByUserId($user_id);
+            $questions = $this->questionRepo->getQuestionByUserId(1);
             return response()->json([
                 "code" => 200,
                 "questions" => $questions,

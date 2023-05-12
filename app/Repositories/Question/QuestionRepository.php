@@ -20,6 +20,9 @@ class QuestionRepository extends Repositories implements IQuestionRepository
     public function find($id){
         return $this->question->find($id);
     }
+    public function getQuestionByStatus($status){
+        return $questions = $this->question->where('status', 0)->paginate(10);
+    }
     public function getListQuesttion($request, $status)
     {
         if($status == 'hide'){
@@ -69,6 +72,13 @@ class QuestionRepository extends Repositories implements IQuestionRepository
     public function total(){
 
     }
+    public function countQuestion(){
+        return $this->question->count();
+    }
+    public function countUnQuestion(){
+        return $this->question->where('status', 0)->count();
+    }
+
 
     //API
 
@@ -96,7 +106,7 @@ class QuestionRepository extends Repositories implements IQuestionRepository
     }
     public function getQuestionByUserId($user_id){
         $questions = question::
-        select('id', 'title', 'content', 'number_of_views', 'number_of_replies')
+        select('id', 'title', 'content', 'number_of_views', 'number_of_replies', 'created_at', 'updated_at')
             ->where('user_id', $user_id)
             ->orderBy('number_of_views')
             ->get();

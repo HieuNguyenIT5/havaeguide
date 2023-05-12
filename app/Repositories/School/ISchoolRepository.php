@@ -12,6 +12,7 @@ interface ISchoolRepository{
     public function deleteSchool($request);
     public function actionSchool($req);
     public function count();
+    public function countSchool();
     public function total();
 
     //Api

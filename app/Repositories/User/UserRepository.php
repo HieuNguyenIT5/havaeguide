@@ -16,7 +16,9 @@ class UserRepository implements IUserRepository
     {
         $this->user = $user;
     }
-
+    public function countUser(){
+        return $this->user->count();
+    }
     public function count(){
         $count = [];
         $count['all_user'] = $this->user->withTrashed()->count();

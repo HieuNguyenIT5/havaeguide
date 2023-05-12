@@ -10,6 +10,7 @@ interface IUserRepository
     public function create($search);
     public function updateUser($search);
     public function delete($search);
+    public function countUser();
     public function count();
     public function total();
 }

@@ -166,10 +166,11 @@ class UserController extends Controller
         );
 
         $user = $this->userRepository->find($id);
-        // dd($req->input('role'));
+        UserRole::where('user_id', $user->id)
+        ->delete();
         UserRole::create([
             'user_id'=>"$user->id",
-            'role_id'=>$req->input('role')
+            'role_id'=>json_encode($req->input('role'))
         ]);
         if(empty($req->file())){
             $avatar = $user->avatar;
