@@ -82,6 +82,9 @@ class Repositories{
                 return $areasCenter['division_type'] == 'thành phố trung ương' ||
                 in_array($areasCenter['code'], [15, 8, 19]);
             });
+            foreach($areasCenter as &$area){
+                $area['image'] = $area['codename'].".jpg";
+            }
             Redis::set("areasCenter", json_encode($areasCenter));
         }else{
             $areasCenter = json_decode($areasCenter);

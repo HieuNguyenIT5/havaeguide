@@ -66,7 +66,6 @@
                         <td style="width:15%; overflow:hidden;"><a href="#">{{$question->created_at}}</a></td>
                         <td>
                             <a href="{{route('admin.question.view', $question->id)}}" class="btn {{$question->status==1 ? "btn-success" : "btn-warning"}} btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Chỉnh sửa"><i class="fa fa-edit"></i></a>
-                            <a href="{{ route('admin.question.delete', $question->id) }}" onclick="return confirm('Bạn có chắc chắn muốn xóa vĩnh viễn trường này không?')" class="btn btn-danger btn-sm rounded-0 text-white" type="button" data-toggle="tooltip" data-placement="top" title="Xóa vĩnh viễn"><i class="fa-solid fa-trash"></i></a>
                         </td>
                     </tr>
                     @endforeach

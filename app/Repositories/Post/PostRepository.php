@@ -129,11 +129,11 @@ class PostRepository extends Repositories implements IPostRepository
 
     public function getPost($slug)
     {
+        $this->plusView($slug);
         $post = post::where('slug', $slug)
         ->join("users", "users.id", "posts.user_id")
             ->select("posts.slug", "posts.title", "posts.image","users.name as user_name", "posts.content", "posts.number_of_views", "posts.created_at")
         ->first();
-        $this->plusView($slug);
         return $post;
     }
     public function plusView($slug){

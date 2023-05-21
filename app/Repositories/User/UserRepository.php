@@ -88,14 +88,52 @@ class UserRepository implements IUserRepository
         ];
         return $this->user->create($user);
     }
-    public function updateUser($id, $attributes = [])
+    public function updateUser($id, $req)
     {
-        $result = $this->find($id);
-        if ($result) {
-            $result->update($attributes);
-            return $result;
+        $req->validate(
+            [
+                'name'=> 'required|string|max:255',
+                'phone'=> 'required|string|digits:10',
+                'avatar' => 'mimes:jpg,png,gif|max:20000',
+            ],
+            [
+                'required'=> ':attribute không được bỏ trống!',
+                'digits'=> ':attribute phải có độ dài 10!',
+                'mimes'=> ':attribute phải có định dạng jpg, png, gif!',
+            ],
+            [
+                'name'=>'Tên người dùng',
+                'phone'=>'Số điện thoại',
+                'avatar'=>'Ảnh đại diện',
+            ],
+        );
+        $user = $this->find($id);
+        if($req->input('role') != []){
+            UserRole::where('user_id', $user->id)
+            ->delete();
+            UserRole::create([
+                'user_id'=>"$user->id",
+                'role_id'=>json_encode($req->input('role'))
+            ]);
         }
-        return false;
+        if(empty($req->file())){
+            $avatar = $user->avatar;
+        }else{
+            $fileName = time().'.'.$req->avatar->extension();
+            $req->avatar->move(public_path("images"), $fileName);
+            $avatar = $fileName;
+        }
+        $userUpdate = [
+            'name' =>$req->input('name'),
+            'gender' =>$req->input('gender'),
+            'phone' =>$req->input('phone'),
+            'avatar' =>$avatar,
+        ];
+        if ($user) {
+            $user->update($userUpdate);
+            return $user;
+        }
+        return null;
     }
 
     public function remove($id)

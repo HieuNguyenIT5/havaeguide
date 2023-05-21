@@ -15,5 +15,9 @@ interface IQuestionRepository{
     public function ask($request);
     public function getQuestionByUserId($user_id);
     public function getQuestion($id);
+    public function updateQuestion($id, $request);
+    public function deleteQuestion($id);
+    public function detailQuestion($id);
+    public function answerQuestion($id, $request);
 
 }

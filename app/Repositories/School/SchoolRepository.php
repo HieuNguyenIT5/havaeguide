@@ -58,7 +58,7 @@ class SchoolRepository extends Repositories implements ISchoolRepository
                 'school_email' => 'required|string|email|max:255|unique:schools,school_email',
                 'school_name' => 'required|string|max:200',
                 'school_address' => 'string|max:500',
-                'school_phone' => 'string|max:10',
+                'school_phone' => 'string|regex:/^0[0-9]{9,10}$/|max:11',
                 'school_image' => 'mimes:jpg,png,gif,webp|max:20000'
             ],
             [
@@ -158,7 +158,7 @@ class SchoolRepository extends Repositories implements ISchoolRepository
         $request->validate($rules, $messages, $attributes);
 
         try {
-            $school = $request->except(['_token', 'major', 'sector', 'search_major', 'type']);
+            $school = $request->except(['_token', 'major', 'sector', 'search_major', 'type', 'benchmark']);
             $type = json_encode($request->type);
             $school_major = json_encode($request->major);
             $school['types'] = $type;
@@ -256,16 +256,29 @@ class SchoolRepository extends Repositories implements ISchoolRepository
     public function total()
     {
     }
+    public function getBenchmark(){
+        return $this->school->with('benchmarks')
+               ->select('id', 'school_name')
+               ->get();
+    }
+    public function storeBenchmark($request){
 
+    }
+    public function updateBenchmark($request){
+
+    }
     //Api
 
     public function getOutstendingSchools()
     {
         try {
-            $schools = $this->school
-                ->select('school_code', 'school_name', 'school_address', 'school_logo', 'school_description')
-                ->limit(12)
-                ->get();
+            $schools = Cache::get('OutstendingSchools');
+            if($schools == null){
+                $schools = $this->school
+                    ->select('school_code', 'school_name', 'school_address', 'school_logo', 'school_description')
+                    ->limit(12)
+                    ->get();
+            }
             return $schools;
         } catch (Exception $e) {
             // Log ra lỗi và trả về null khi thất bại

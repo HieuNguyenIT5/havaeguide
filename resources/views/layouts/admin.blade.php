@@ -22,9 +22,9 @@
                         <i class="plus-icon fas fa-plus-circle"></i>
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{{url('admin/post/add')}}">Thêm bài viết</a>
-                        <a class="dropdown-item" href="{{url('admin/product/create')}}">Thêm sản phẩm</a>
-                        <a class="dropdown-item" href="{{url('admin/order/list')}}">Xem đơn hàng</a>
+                        <a class="dropdown-item" href="{{url('admin/post/create')}}">Thêm bài viết</a>
+                        <a class="dropdown-item" href="{{url('admin/school/create')}}">Thêm trường</a>
+                        <a class="dropdown-item" href="{{url('admin/question')}}">Duyệt câu hỏi</a>
                     </div>
                 </div>
                 <div class="btn-group">
@@ -95,6 +95,7 @@
                                 <a href="{{route('admin.school.create')}}">Thêm mới</a>
                             </li>
                             <li><a href="{{route('admin.school.index')}}">Danh sách</a></li>
+                            <li><a href="{{route('admin.school.index')}}">Thêm điểm chuẩn</a></li>
                             <li><a href="{{route('admin.type.index')}}">Hệ đào tạo</a></li>
                         </ul>
                     </li>
@@ -142,7 +143,7 @@
                             <div class="nav-link-icon d-inline-flex">
                                 <i class="fa-solid fa-user"></i>
                             </div>
-                            Users
+                            Người dùng
                         </a>
                         <i class="arrow fas fa-angle-right"></i>
 

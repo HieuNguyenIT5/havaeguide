@@ -14,6 +14,8 @@ interface ISchoolRepository{
     public function count();
     public function countSchool();
     public function total();
+    public function storeBenchmark($request);
+    public function updateBenchmark($request);
 
     //Api
     public function getOutstendingSchools();

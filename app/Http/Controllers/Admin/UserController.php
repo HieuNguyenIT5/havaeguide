@@ -147,46 +147,7 @@ class UserController extends Controller
         return view('admin.user.edit', compact('user','roles'));
     }
     function update(Request $req, $id){
-        $req->validate(
-            [
-                'name'=> 'required|string|max:255',
-                'phone'=> 'required|string|digits:10',
-                'avatar' => 'mimes:jpg,png,gif|max:20000',
-            ],
-            [
-                'required'=> ':attribute không được bỏ trống!',
-                'digits'=> ':attribute phải có độ dài 10!',
-                'mimes'=> ':attribute phải có định dạng jpg, png, gif!',
-            ],
-            [
-                'name'=>'Tên người dùng',
-                'phone'=>'Số điện thoại',
-                'avatar'=>'Ảnh đại diện',
-            ],
-        );
-
-        $user = $this->userRepository->find($id);
-        UserRole::where('user_id', $user->id)
-        ->delete();
-        UserRole::create([
-            'user_id'=>"$user->id",
-            'role_id'=>json_encode($req->input('role'))
-        ]);
-        if(empty($req->file())){
-            $avatar = $user->avatar;
-        }else{
-            $fileName = time().'.'.$req->avatar->extension();
-            $req->avatar->move(public_path("images"), $fileName);
-            $avatar = $fileName;
-        }
-        $userUpdate = [
-            'name' =>$req->input('name'),
-            'gender' =>$req->input('gender'),
-            'phone' =>$req->input('phone'),
-            'avatar' =>$avatar,
-        ];
-        // dd($user->email);
-        if($this->userRepository->updateUser($id,$userUpdate)){
+        if($this->userRepository->updateUser($id,$req)){
             return redirect('admin/user/list')->with('success', "Đã cập nhật thành công!");
         }else{
             return redirect('admin/user/list')->with('success', "Đã cập nhật thành công!");

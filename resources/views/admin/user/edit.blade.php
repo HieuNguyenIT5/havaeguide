@@ -36,9 +36,9 @@
                 <div class="form-group">
                     <label for="avatar">Ảnh đại diện</label>
                     <div>
-                        <input type="file" name="avatar" id="avatar" class="@error('file') is-invalid @enderror">
+                        <input type="file" name="avatar" id="avatar" accept="image/gif, image/jpeg, image/png" onchange="loadFileImage(event, 'user_avatar')">
                         <div class="image">
-                            <img src="{{asset('images/'.$user->avatar)}}" alt="Ảnh đại diện">
+                            <img id="user_avatar" class="image-show" src="{{asset('images/'.($user->avatar ?? 'image_blank.jpg'))}}" alt="Ảnh minh họa">
                         </div>
                     </div>
                     @error('avatar')

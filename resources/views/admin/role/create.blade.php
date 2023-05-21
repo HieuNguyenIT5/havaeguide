@@ -17,15 +17,15 @@
                     <div class="checkbox mt-2" style="height: 550px; overflow-y: auto">
                         @foreach($routes as $route)
                             <div class="routeItem">
-                            <input type="checkbox" name="route[]" value="{{$route}}">
-                            <label>{{$route}}</label>
+                            <input type="checkbox" id="{{$route}}" name="route[]" value="{{$route}}">
+                            <label for="{{$route}}">{{$route}}</label>
                             </div>
                         @endforeach
                     </div>
 
                 </div>
                 <button type="submit" name="btnCreate" value="Thêm mới" class="btn btn-primary">Thêm mới</button>
-                    <input type="checkbox" class="check-all"> Chọn tất cả
+                    <input type="checkbox" id="check-all" class="check-all"> <label for="check-all">Chọn tất cả</label> 
             </form>
         </div>
     </div>
@@ -40,11 +40,11 @@
             for(let i = componentRoute.length-1; i > 0; i--){
                 if(componentRoute[i]){
                     switch(componentRoute[i].trim()){
-                    case "product":
-                        name += "sản phẩm ";
+                    case "school":
+                        name += "trường học ";
                         break;
-                    case "cat":
-                        name += "danh mục ";
+                    case "type":
+                        name += "hệ đào tạo ";
                         break;
                     case "user":
                         name += "người dùng ";
@@ -58,11 +58,20 @@
                     case "dashboard":
                         name += "xem dashboard ";
                         break;
-                    case "brand":
-                        name += "thương hiệu ";
+                    case "sector":
+                        name += "nhóm ngành ";
                         break;
-                    case "feedback":
-                        name += "phản hồi ";
+                    case "major":
+                        name += "ngành đào tạo ";
+                        break;
+                    case "post":
+                        name += "bài viết ";
+                        break;
+                    case "page":
+                        name += "trang tĩnh ";
+                        break;
+                    case "question":
+                        name += "câu hỏi ";
                         break;
                     case "index":
                         name += "xem danh sách ";
@@ -87,6 +96,12 @@
                         break;
                     case "delete":
                         name += "xóa vĩnh viễn ";
+                        break;
+                    case "import":
+                        name += "nhập file ";
+                        break;
+                    case "export":
+                        name += "xuất file excel ";
                         break;
                     case "status":
                         name += "xem danh sách theo trạng thái ";

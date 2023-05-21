@@ -73,6 +73,7 @@ Route::middleware('auth')->group(function () {
             Route::get('remove/{id}', [SchoolController::class, 'remove'])->name('.remove');
             Route::get('restore/{id}', [SchoolController::class, 'restore'])->name('.restore');
             Route::get('delete/{id}', [SchoolController::class, 'delete'])->name('.delete');
+            Route::get('benchmark', [SchoolController::class, 'benchmark'])->name('.benchmark');
         });
         Route::group(['prefix'=>'school_type', 'as'=> '.type'],function () {
             Route::get('/', [SchoolTypeController::class, 'index'])->name('.index');

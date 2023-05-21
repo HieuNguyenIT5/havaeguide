@@ -16,4 +16,8 @@ class School extends Model
     {
         return $this->belongsToMany(Major::class, 'school_majors');
     }
+    public function benchmarks()
+    {
+        return $this->hasMany(Benchmark::class);
+    }
 }

@@ -78,28 +78,11 @@ class SectorRepository extends Repositories implements ISectorRepository
         );
         try {
             $currentSector = $this->Sector->find($request->id);
-
-            if (!empty($currentSector->image)) {
-                $imagePath = public_path("images") . '/' . $currentSector->image;
-                if (file_exists($imagePath)) {
-                    unlink($imagePath);
-                }
-            }
-
-            if (!empty($request->file('image'))) {
-                $fileName = 'sector_' . time() . '.' . $request->image->extension();
-                $request->image->move(public_path("images"), $fileName);
-                $image = $fileName;
-            } else {
-                $image = 'image_blank.jpg';
-            }
-
             $data = [
                 "name" => $request->name,
-                "description" => $request->description,
-                "image" => $image,
+                "description" => $request->description
             ];
-
+            $data['image'] = $this->saveImage($request, 'school_image',$currentSector->image);
             $currentSector->update($data);
             return redirect()->back()->with('success', "Đã cập nhật nhóm ngành thành công!");
         } catch (Exception) {

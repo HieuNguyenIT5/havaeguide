@@ -32,6 +32,8 @@ Route::get('comment/{code}', [ApiController::class, 'getAllComment'])->name('api
 Route::get('areas', [ApiController::class, 'getAllArea'])->name('api.area.getAllArea');
 Route::get('area/{codename}', [ApiController::class, 'getArea'])->name('api.area.getArea');
 Route::get('questions', [ApiController::class, 'getAllQuestion'])->name('api.questions');
+Route::get('question/edit/{id}', [ApiController::class, 'getQuestion'])->name('api.getQuestion'); 
+Route::get('question/{id}', [ApiController::class, 'detailQuestion'])->name('api.detailQuestion'); 
 
 Route::get('posts', [ApiController::class, 'getAllPost'])->name('api.post.getAllPost');
 Route::get('post/{slug}', [ApiController::class, 'getPost'])->name('api.post.getPost');
@@ -45,6 +47,10 @@ Route::middleware('token.verify')->group(function () {
     Route::get('user_info', [ApiAuthController::class, 'getUserInfo'])->name('api.getUserInfo');
     Route::post('comment/add', [ApiController::class, 'addComment'])->name('api.addComment');
     Route::post('question/ask', [ApiController::class, 'ask'])->name('api.question.ask');
+    Route::post('question/update/{id}', [ApiController::class, 'updateQuestion'])->name('api.updateQuestion');
+    Route::get('question/edit/{id}', [ApiController::class, 'getQuestion'])->name('api.getQuestion'); 
+    Route::delete('question/delete/{id}', [ApiController::class, 'deleteQuestion'])->name('api.deleteQuestion'); 
+    Route::post('question/{id}/answer', [ApiController::class, 'answerQuestion'])->name('api.answerQuestion'); 
     Route::get('myquestion', [ApiController::class, 'getAllQuestionByUserId'])->name('api.question.AllQuestionByUserId');
 });
 Route::get('listRoute', [RoleController::class, 'listRoute'])->name('.listRoute');

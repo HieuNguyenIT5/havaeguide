@@ -78,4 +78,13 @@ class SchoolController extends Controller
     function action(Request $req){
         return $this->schoolRepo->actionSchool($req);
     }
+
+    public function benchmark(){
+        try{
+            $schools = $this->schoolRepo->getBenchmark();
+            return view('admin.school.benchmark', compact('schools'));
+        }catch(Exception $e){
+            return view('admin.school.benchmark', compact('schools'))->with('danger', 'Có lỗi sảy ra vui long thử lại sau!');
+        }
+    }
 }

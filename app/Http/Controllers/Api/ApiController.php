@@ -278,22 +278,84 @@ class ApiController extends Controller
             ],500);
         }
     }
-    //Lấy tất cả các câu hỏi
+    //Lấy câu hỏi
     public function getQuestion($id){
         try{
             $question = $this->questionRepo->getQuestion($id);
             return response()->json([
                 "code" => 200,
-                "questions" => $question,
+                "question" => $question,
             ],200);
         }catch (Exception $e){
             return response()->json([
-                "code" => 500,
-                "message" => "Lỗi trong quá trình đặt câu hỏi",
-            ],500);
+                "code" => 404,
+                "message" => "Lỗi trong quá trình lấy câu hỏi!",
+            ],404);
         }
     }
 
+    //Cập nhật câu hỏi
+    public function updateQuestion($id, Request $request){
+        try{
+            $question = $this->questionRepo->updateQuestion($id, $request);
+            return response()->json([
+                "code" => 200,
+                "message" => "Cập nhật câu hỏi thành công!",
+            ],200);
+        }catch (Exception $e){
+            return response()->json([
+                "code" => 404,
+                "message" => "Lỗi trong quá trình cập nhật câu hỏi",
+            ],404);
+        }
+    }
+    //Xóa câu hỏi
+    public function deleteQuestion($id){
+        try{
+            $this->questionRepo->deleteQuestion($id);
+            return response()->json([
+                "code" => 200,
+                "message" => "Xóa câu hỏi thành công!",
+            ],200);
+        }catch (Exception $e){
+            return response()->json([
+                "code" => 404,
+                "message" => "Lỗi trong quá trình xóa câu hỏi",
+            ],404);
+        }
+    }
+
+    //Hiển thị câu hỏi
+    public function detailQuestion($id){
+        try{
+            $question = $this->questionRepo->detailQuestion($id);
+            return response()->json([
+                "code" => 200,
+                "question" => $question,
+            ],200);
+        }catch (Exception $e){
+            return response()->json([
+                "code" => 404,
+                "message" => "Lỗi trong quá trình hiển thị câu hỏi",
+            ],404);
+        }
+    }
+
+    //Trà lời câu hỏi
+    public function answerQuestion($id, Request $request){
+        try{
+            $answer = $this->questionRepo->answerQuestion($id, $request);
+            return response()->json([
+                "code" => 200,
+                "answer" => $answer,
+            ],200);
+        }catch (Exception $e){
+            return response()->json([
+                "code" => 404,
+                "message" => $e,
+            ],404);
+        }
+    }
     //Lấy tất cả các bài viết
     public function getAllPost(){
         try{
